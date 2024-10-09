@@ -1,4 +1,5 @@
 node_modules/
+Xnode_modules/
 foo/
 
 # Environment variables
