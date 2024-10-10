@@ -17,6 +17,13 @@
     <button type="submit">Add Task</button>
   </form>
 
+  <!-- Filter buttons -->
+  <div id="task-filters">
+    <button onclick="setFilter('all')">Show All</button>
+    <button onclick="setFilter('pending')">Show Pending</button>
+    <button onclick="setFilter('completed')">Show Completed</button>
+  </div>
+
   <!-- List to display tasks -->
   <h2>Your Tasks</h2>
   <ul id="task-list"></ul>
