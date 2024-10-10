@@ -5,7 +5,8 @@ const taskSchema = new mongoose.Schema({
   description: { type: String, required: true },
   status: { type: String, default: 'pending' },  // default status is 'pending'
   createdAt: { type: Date, default: Date.now },  // auto-set creation date
-  completedAt: { type: Date, default: null }  // auto-set completion date 
+  completedAt: { type: Date, default: null },  // auto-set completion date
+  priority: { type: String, default: null }  // default task priority
 });
 
 module.exports = mongoose.model('Task', taskSchema);
