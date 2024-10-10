@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');  // Import cors
 const taskRoutes = require('./routes/taskRoutes');
 const dotenv = require('dotenv');
 
@@ -7,6 +8,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());  // Add this line to enable CORS
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
