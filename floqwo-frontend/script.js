@@ -21,9 +21,9 @@ async function fetchTasks() {
     if (currentFilter === 'all' || task.status === currentFilter) {
       const taskItem = document.createElement('li');
       taskItem.innerHTML = `
-        <span>${task.title}: ${task.description} [${task.status}]</span>
+        <span><strong>${task.title}</strong>: ${task.description} [${task.status}]</span>
       `;
-
+  
       // If the task is pending, add a "Mark as Complete" button
       if (task.status === 'pending') {
         const completeButton = document.createElement('button');
@@ -31,21 +31,22 @@ async function fetchTasks() {
         completeButton.onclick = () => completeTask(task._id);
         taskItem.appendChild(completeButton);
       }
-
+  
       // Add a delete button for all tasks
       const deleteButton = document.createElement('button');
       deleteButton.innerText = 'Delete';
       deleteButton.onclick = () => deleteTask(task._id);
       taskItem.appendChild(deleteButton);
-
+  
       // If the task is completed, apply the completed style
       if (task.status === 'completed') {
         taskItem.classList.add('completed');  // Add a CSS class to completed tasks
       }
-
+  
       taskList.appendChild(taskItem);
     }
   });
+  
 }
 
 // Function to add a new task

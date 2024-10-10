@@ -66,6 +66,12 @@ body {
     text-decoration: line-through;
     color: #888888; /* Gray color for completed tasks */
   }
+
+  /* Bold Task Titles */
+li span strong {
+    font-weight: bold;
+    color: #93b9ff; /* Optional: Customize the color if needed */
+  }
   
   /* Mark as Complete Button */
   li button {

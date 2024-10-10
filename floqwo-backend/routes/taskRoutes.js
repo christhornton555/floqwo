@@ -20,8 +20,8 @@ router.get('/tasks', async (req, res) => {
 router.post(
   '/tasks',
   [
-    body('title').notEmpty().withMessage('Title is required'),
-    body('description').notEmpty().withMessage('Description is required'),
+    body('title').trim().escape().notEmpty().withMessage('Title is required'),
+    body('description').trim().escape().notEmpty().withMessage('Description is required'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -29,7 +29,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // Create a new task using the Task model
+    // Create a new task using the sanitized input
     try {
       const task = new Task({
         title: req.body.title,
