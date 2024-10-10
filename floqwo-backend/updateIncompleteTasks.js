@@ -1,3 +1,5 @@
+// This script adds a completedAt value to tasks which are not yet completed
+
 require('dotenv').config();  // Load environment variables
 const mongoose = require('mongoose');
 const Task = require('./models/Task');  // Import the Task model
