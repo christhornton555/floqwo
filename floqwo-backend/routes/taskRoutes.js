@@ -47,18 +47,28 @@ router.post(
 // Route to update a task (UPDATE)
 router.put('/tasks/:id', async (req, res) => {
   try {
-    const updatedTask = await Task.findByIdAndUpdate(
-      req.params.id,
-      {
-        title: req.body.title,
-        description: req.body.description,
-        status: req.body.status,
-      },
-      { new: true }  // Return the updated task
-    );
-    if (!updatedTask) {
+    // Find the task by ID
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
+
+    // Update the task fields
+    task.title = req.body.title || task.title;
+    task.description = req.body.description || task.description;
+    
+    // Check if the status is updated to "completed"
+    if (req.body.status === 'completed' && task.status !== 'completed') {
+      task.completedAt = Date.now();  // Set completedAt to the current date
+    }
+
+    // Update the status
+    task.status = req.body.status || task.status;
+
+    // Save the updated task
+    const updatedTask = await task.save();
+
     res.json(updatedTask);
   } catch (err) {
     res.status(500).json({ error: 'Error updating task' });
