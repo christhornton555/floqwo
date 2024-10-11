@@ -1,5 +1,5 @@
 const apiUrl = 'https://floqwo-796cad1ba057.herokuapp.com/api/tasks'; // Your backend API
-let currentFilter = 'all';  // Default filter is 'all'
+let currentFilter = 'pending';  // Default filter is 'all'
 
 // Check if token is valid on page load
 function checkToken() {
