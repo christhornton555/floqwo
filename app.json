@@ -1,0 +1,12 @@
+{
+    "name": "floqwo-backend",
+    "scripts": {
+      "postdeploy": "cd floqwo-backend && npm install && npm start"
+    },
+    "buildpacks": [
+      {
+        "url": "heroku/nodejs"
+      }
+    ]
+  }
+  
