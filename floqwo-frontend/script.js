@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:3000/api/tasks'; // Your backend API
+const apiUrl = 'https://floqwo-796cad1ba057.herokuapp.com/api/tasks'; // Your backend API
 let currentFilter = 'all';  // Default filter is 'all'
 
 // Function to set the filter
