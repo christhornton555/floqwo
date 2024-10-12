@@ -21,6 +21,20 @@ function setFilter(filter) {
   fetchTasks();  // Re-fetch tasks when the filter changes
 }
 
+// Function to calculate the percentage of time passed between creation and due date
+function calculateTimePassedPercentage(createdAt, dueDate) {
+  const createdTime = new Date(createdAt).getTime();
+  const dueTime = new Date(dueDate).getTime();
+  const nowTime = Date.now();
+
+  // Calculate the total time available and the time that has passed
+  const totalTime = dueTime - createdTime;
+  const timePassed = nowTime - createdTime;
+
+  // Return the percentage of time passed
+  return (timePassed / totalTime) * 100;
+}
+
 // Function to format the date into "DD/MM/YYYY, HH.MM"
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -46,14 +60,24 @@ function renderTasks(tasks) {
       let completedAt = '';
       let dueDate = '';
 
-      // Check if the task is completed and format the completed date
-      if (task.status === 'completed' && task.completedAt) {
-        completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
-      }
-
       // Check if the task has a due date
       if (task.dueDate) {
         dueDate = `<div class="due-date">Due: ${formatDate(task.dueDate)}</div>`;
+        
+        // Calculate the percentage of time passed
+        const timePassedPercentage = calculateTimePassedPercentage(task.createdAt, task.dueDate);
+
+        // Apply priority-based background colors based on the percentage of time passed
+        if (timePassedPercentage >= 90) {
+          taskItem.style.backgroundColor = '#630000'; // 90% of time passed
+        } else if (timePassedPercentage >= 80) {
+          taskItem.style.backgroundColor = '#260000'; // 80% of time passed
+        }
+      }
+
+      // Check if the task is completed and format the completed date
+      if (task.status === 'completed' && task.completedAt) {
+        completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
       }
 
       // Create task content with date, title, description, and optionally the completed date and due date
