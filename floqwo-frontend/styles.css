@@ -75,9 +75,9 @@ li.completed span {
 }
 
 /* Bold Task Titles */
-li span strong {
+.task-info strong {
   font-weight: bold;
-  color: #93b9ff; /* Optional: Customize the color if needed */
+  color: #93b9ff; /* Custom color for task titles */
 }
 
 /* Complete Button */
@@ -98,21 +98,47 @@ li button.delete-btn:hover {
   background-color: #e60000; /* Darker red on hover */
 }
 
+/* Styling for the task creation date */
+.task-content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* Add space between task content and buttons */
+}
+
+.task-date {
+  font-size: 12px;
+  color: #aaaaaa; /* Lighter color for date */
+  margin-bottom: 5px; /* Add some space between the date and the title/description */
+}
+
+/* Completed date styling */
+.completed-date {
+  font-size: 12px;
+  color: #4caf50; /* Green color for completed date */
+  margin-top: 5px; /* Space between description and completed date */
+}
+
+/* Ensure task title and description are aligned properly */
+.task-info {
+  font-size: 16px;
+  color: #ffffff;
+}
+
 /* Media Query for Narrow Screens (phones) */
 @media (max-width: 600px) {
   /* Stack buttons vertically on narrow screens */
   li .task-buttons {
-      flex-direction: column; /* Stack buttons vertically */
-      gap: 5px; /* Reduce space between stacked buttons */
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 5px; /* Reduce space between stacked buttons */
   }
   
   /* Optional: Adjust the padding and size of buttons for small screens */
   button {
-      padding: 8px 16px;
-      font-size: 14px;
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
-  
+
 /* Scrollbar Styling for Dark Mode */
 ::-webkit-scrollbar {
   width: 10px;
@@ -129,4 +155,3 @@ li button.delete-btn:hover {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #777;
 }
-  

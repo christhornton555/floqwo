@@ -21,6 +21,17 @@ function setFilter(filter) {
   fetchTasks();  // Re-fetch tasks when the filter changes
 }
 
+// Function to format the date into "DD/MM/YYYY, HH.MM"
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${day}/${month}/${year}, ${hours}.${minutes}`;
+}
+
 // Function to render tasks into the DOM
 function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
@@ -30,8 +41,25 @@ function renderTasks(tasks) {
   tasks.forEach(task => {
     if (currentFilter === 'all' || task.status === currentFilter) {
       const taskItem = document.createElement('li');
+
+      // Format the creation date
+      const createdAt = formatDate(task.createdAt);
+      let completedAt = '';
+
+      // Check if the task is completed and format the completed date
+      if (task.status === 'completed' && task.completedAt) {
+        completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
+      }
+
+      // Create task content with date, title, and description
       taskItem.innerHTML = `
-        <span><strong>${task.title}</strong>: ${task.description} [${task.status}]</span>
+        <div class="task-content">
+          <div class="task-date">${createdAt}</div>
+          <div class="task-info">
+            <strong>${task.title}</strong>: ${task.description}
+          </div>
+          ${completedAt} <!-- Only show if completed -->
+        </div>
       `;
 
       // Create a container for the buttons
