@@ -34,19 +34,28 @@ function renderTasks(tasks) {
         <span><strong>${task.title}</strong>: ${task.description} [${task.status}]</span>
       `;
 
-      // If the task is pending, add a "Mark as Complete" button
+      // Create a container for the buttons
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('task-buttons');
+
+      // If the task is pending, add a "Complete" button
       if (task.status === 'pending') {
         const completeButton = document.createElement('button');
-        completeButton.innerText = 'Mark as Complete';
+        completeButton.innerText = 'Complete';
+        completeButton.classList.add('complete-btn');
         completeButton.onclick = () => completeTask(task._id);
-        taskItem.appendChild(completeButton);
+        buttonContainer.appendChild(completeButton);
       }
 
       // Add a delete button for all tasks
       const deleteButton = document.createElement('button');
       deleteButton.innerText = 'Delete';
+      deleteButton.classList.add('delete-btn');
       deleteButton.onclick = () => deleteTask(task._id);
-      taskItem.appendChild(deleteButton);
+      buttonContainer.appendChild(deleteButton);
+
+      // Append the button container to the task item
+      taskItem.appendChild(buttonContainer);
 
       // If the task is completed, apply the completed style
       if (task.status === 'completed') {
