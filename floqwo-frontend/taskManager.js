@@ -152,6 +152,25 @@ async function fetchTasks() {
   }
 }
 
+// Function to apply timezone offset and adjust the UTC time to local time
+function applyTimezoneOffsetToUTC(inputDateTime) {
+  const utcDateTime = new Date(inputDateTime); // Convert input to UTC
+  const timezoneOffset = utcDateTime.getTimezoneOffset() * 60000; // Get offset in milliseconds
+
+  // Apply the timezone offset to convert UTC to local time
+  const localDateTime = new Date(utcDateTime.getTime() + timezoneOffset); // Add the offset to UTC
+
+  // Format the adjusted local date/time as an ISO string (without converting back to UTC)
+  const year = localDateTime.getFullYear();
+  const month = String(localDateTime.getMonth() + 1).padStart(2, '0');
+  const day = String(localDateTime.getDate()).padStart(2, '0');
+  const hours = String(localDateTime.getHours()).padStart(2, '0');
+  const minutes = String(localDateTime.getMinutes()).padStart(2, '0');
+  const seconds = String(localDateTime.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
 // Function to add a new task
 async function addTask(event) {
   event.preventDefault();
@@ -159,15 +178,17 @@ async function addTask(event) {
   const token = localStorage.getItem('token');
   const title = document.getElementById('task-title').value;
   const description = document.getElementById('task-description').value;
-  const dueDate = document.getElementById('task-due-date').value;  // Get the optional due date
+  const dueDateInput = document.getElementById('task-due-date').value;
 
   const taskData = {
     title,
     description
   };
 
-  if (dueDate) {
-    taskData.dueDate = dueDate;  // Add due date to the task if provided
+  // If a due date is provided, adjust it by applying the timezone offset to UTC
+  if (dueDateInput) {
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
   }
 
   const response = await fetch(apiUrl, {
