@@ -3,9 +3,6 @@ const { body, validationResult } = require('express-validator');
 const Task = require('../models/Task');  // Import the Task model
 const router = express.Router();
 
-// Sample in-memory data store (for now, we'll use an array of tasks)
-let tasks = [];
-
 // Route to get all tasks (READ)
 router.get('/tasks', async (req, res) => {
   try {
@@ -31,11 +28,18 @@ router.post(
 
     // Create a new task using the sanitized input
     try {
-      const task = new Task({
+      const taskData = {
         title: req.body.title,
         description: req.body.description,
-        status: req.body.status || 'pending',
-      });
+        status: req.body.status || 'pending'
+      };
+
+      // If dueDate is provided, add it to the task data
+      if (req.body.dueDate) {
+        taskData.dueDate = req.body.dueDate;
+      }
+
+      const task = new Task(taskData);
       const savedTask = await task.save();  // Save the task to MongoDB
       res.status(201).json(savedTask);
     } catch (err) {
@@ -57,7 +61,12 @@ router.put('/tasks/:id', async (req, res) => {
     // Update the task fields
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
-    
+
+    // Update the due date if provided
+    if (req.body.dueDate) {
+      task.dueDate = req.body.dueDate;
+    }
+
     // Check if the status is updated to "completed"
     if (req.body.status === 'completed' && task.status !== 'completed') {
       task.completedAt = Date.now();  // Set completedAt to the current date

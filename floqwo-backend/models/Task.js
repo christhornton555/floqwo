@@ -1,12 +1,33 @@
 const mongoose = require('mongoose');
 
+// Define the Task schema
 const taskSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  status: { type: String, default: 'pending' },  // default status is 'pending'
-  createdAt: { type: Date, default: Date.now },  // auto-set creation date
-  completedAt: { type: Date, default: null },  // auto-set completion date
-  priority: { type: String, default: null }  // default task priority
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'completed'],
+    default: 'pending'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  completedAt: {
+    type: Date
+  },
+  dueDate: {  // New field for the due date (optional)
+    type: Date
+  }
 });
 
-module.exports = mongoose.model('Task', taskSchema);
+// Create the Task model from the schema
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;

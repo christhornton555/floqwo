@@ -37,7 +37,6 @@ function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
   taskList.innerHTML = ''; // Clear the task list
 
-  // Loop through each task and display them based on the current filter
   tasks.forEach(task => {
     if (currentFilter === 'all' || task.status === currentFilter) {
       const taskItem = document.createElement('li');
@@ -45,19 +44,26 @@ function renderTasks(tasks) {
       // Format the creation date
       const createdAt = formatDate(task.createdAt);
       let completedAt = '';
+      let dueDate = '';
 
       // Check if the task is completed and format the completed date
       if (task.status === 'completed' && task.completedAt) {
         completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
       }
 
-      // Create task content with date, title, and description
+      // Check if the task has a due date
+      if (task.dueDate) {
+        dueDate = `<div class="due-date">Due: ${formatDate(task.dueDate)}</div>`;
+      }
+
+      // Create task content with date, title, description, and optionally the completed date and due date
       taskItem.innerHTML = `
         <div class="task-content">
           <div class="task-date">${createdAt}</div>
           <div class="task-info">
             <strong>${task.title}</strong>: ${task.description}
           </div>
+          ${dueDate} <!-- Only show if there's a due date -->
           ${completedAt} <!-- Only show if completed -->
         </div>
       `;
@@ -129,6 +135,16 @@ async function addTask(event) {
   const token = localStorage.getItem('token');
   const title = document.getElementById('task-title').value;
   const description = document.getElementById('task-description').value;
+  const dueDate = document.getElementById('task-due-date').value;  // Get the optional due date
+
+  const taskData = {
+    title,
+    description
+  };
+
+  if (dueDate) {
+    taskData.dueDate = dueDate;  // Add due date to the task if provided
+  }
 
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -136,7 +152,7 @@ async function addTask(event) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify({ title, description })
+    body: JSON.stringify(taskData)
   });
 
   if (response.ok) {

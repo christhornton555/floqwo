@@ -111,6 +111,13 @@ li button.delete-btn:hover {
   margin-bottom: 5px; /* Add some space between the date and the title/description */
 }
 
+/* Due date styling */
+.due-date {
+  font-size: 12px;
+  color: #ffcc00; /* Optional: Yellow shade for due date */
+  margin-top: 5px; /* Space between description and due date */
+}
+
 /* Completed date styling */
 .completed-date {
   font-size: 12px;
