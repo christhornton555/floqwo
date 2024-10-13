@@ -31,7 +31,8 @@ router.post(
       const taskData = {
         title: req.body.title,
         description: req.body.description,
-        status: req.body.status || 'pending'
+        status: req.body.status || 'pending',
+        tags: req.body.tags || []  // Handle tags, defaulting to an empty array if none are provided
       };
 
       // If dueDate is provided, add it to the task data

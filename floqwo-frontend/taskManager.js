@@ -46,12 +46,110 @@ function formatDate(dateString) {
   return `${day}/${month}/${year}, ${hours}.${minutes}`;
 }
 
+// Function to sort tasks based on due date first, and creation date second
+function sortTasks(tasks) {
+  return tasks.sort((a, b) => {
+    // If both tasks have due dates, sort by due date (earliest first)
+    if (a.dueDate && b.dueDate) {
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    }
+
+    // If only one task has a due date, that one comes first
+    if (a.dueDate && !b.dueDate) {
+      return -1;
+    }
+    if (!a.dueDate && b.dueDate) {
+      return 1;
+    }
+
+    // If neither task has a due date, sort by creation date (earliest first)
+    return new Date(a.createdAt) - new Date(b.createdAt);
+  });
+}
+
+// Function to get the selected tags
+function getSelectedTags() {
+  const tags = [];
+  if (document.getElementById('tag-work').checked) {
+    tags.push('work');
+  }
+  if (document.getElementById('tag-priority').checked) {
+    tags.push('priority');
+  }
+  if (document.getElementById('tag-dev').checked) {
+    tags.push('dev');
+  }
+  return tags;
+}
+
+// Function to apply tag styles
+function getTagColor(tag) {
+  switch(tag) {
+    case 'work':
+      return '#2196F3'; // Blue
+    case 'priority':
+      return '#FF5722'; // Orange
+    case 'dev':
+      return '#4CAF50'; // Green
+    default:
+      return '#000'; // Default black for unhandled tags
+  }
+}
+
+// Function to render tags
+function renderTags(tags) {
+  if (!tags || tags.length === 0) return '';
+  return tags.map(tag => `<span class="tag" style="background-color: ${getTagColor(tag)};">${tag}</span>`).join(' ');
+}
+
+// Function to add a new task
+async function addTask(event) {
+  event.preventDefault();
+
+  const token = localStorage.getItem('token');
+  const title = document.getElementById('task-title').value;
+  const description = document.getElementById('task-description').value;
+  const dueDateInput = document.getElementById('task-due-date').value;
+  const tags = getSelectedTags(); // Get selected tags
+
+  const taskData = {
+    title,
+    description,
+    tags
+  };
+
+  // If a due date is provided, adjust it by applying the timezone offset to UTC
+  if (dueDateInput) {
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+  }
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(taskData)
+  });
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after adding
+    document.getElementById('task-form').reset();  // Clear form
+  } else {
+    alert('Failed to add task');
+  }
+}
+
 // Function to render tasks into the DOM
 function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
   taskList.innerHTML = ''; // Clear the task list
 
-  tasks.forEach(task => {
+  // Sort tasks first
+  const sortedTasks = sortTasks(tasks);
+
+  sortedTasks.forEach(task => {
     if (currentFilter === 'all' || task.status === currentFilter) {
       const taskItem = document.createElement('li');
 
@@ -59,20 +157,16 @@ function renderTasks(tasks) {
       const createdAt = formatDate(task.createdAt);
       let completedAt = '';
       let dueDate = '';
+      let tags = '';
+
+      // Check if the task has tags and render them
+      if (task.tags) {
+        tags = renderTags(task.tags);  // Render tags if present
+      }
 
       // Check if the task has a due date
       if (task.dueDate) {
         dueDate = `<div class="due-date">Due: ${formatDate(task.dueDate)}</div>`;
-        
-        // Calculate the percentage of time passed
-        const timePassedPercentage = calculateTimePassedPercentage(task.createdAt, task.dueDate);
-
-        // Apply priority-based background colors based on the percentage of time passed
-        if (timePassedPercentage >= 90) {
-          taskItem.style.backgroundColor = '#630000'; // 90% of time passed
-        } else if (timePassedPercentage >= 80) {
-          taskItem.style.backgroundColor = '#260000'; // 80% of time passed
-        }
       }
 
       // Check if the task is completed and format the completed date
@@ -80,9 +174,10 @@ function renderTasks(tasks) {
         completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
       }
 
-      // Create task content with date, title, description, and optionally the completed date and due date
+      // Create task content with date, title, description, and optionally the completed date, due date, and tags
       taskItem.innerHTML = `
         <div class="task-content">
+          <div class="tags">${tags}</div>
           <div class="task-date">${createdAt}</div>
           <div class="task-info">
             <strong>${task.title}</strong>: ${task.description}
@@ -171,42 +266,42 @@ function applyTimezoneOffsetToUTC(inputDateTime) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
-// Function to add a new task
-async function addTask(event) {
-  event.preventDefault();
+// // Function to add a new task
+// async function addTask(event) {
+//   event.preventDefault();
 
-  const token = localStorage.getItem('token');
-  const title = document.getElementById('task-title').value;
-  const description = document.getElementById('task-description').value;
-  const dueDateInput = document.getElementById('task-due-date').value;
+//   const token = localStorage.getItem('token');
+//   const title = document.getElementById('task-title').value;
+//   const description = document.getElementById('task-description').value;
+//   const dueDateInput = document.getElementById('task-due-date').value;
 
-  const taskData = {
-    title,
-    description
-  };
+//   const taskData = {
+//     title,
+//     description
+//   };
 
-  // If a due date is provided, adjust it by applying the timezone offset to UTC
-  if (dueDateInput) {
-    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
-    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
-  }
+//   // If a due date is provided, adjust it by applying the timezone offset to UTC
+//   if (dueDateInput) {
+//     const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+//     taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+//   }
 
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(taskData)
-  });
+//   const response = await fetch(apiUrl, {
+//     method: 'POST',
+//     headers: { 
+//       'Content-Type': 'application/json',
+//       'Authorization': `Bearer ${token}`
+//     },
+//     body: JSON.stringify(taskData)
+//   });
 
-  if (response.ok) {
-    fetchTasks();  // Refresh the task list after adding
-    document.getElementById('task-form').reset();  // Clear form
-  } else {
-    alert('Failed to add task');
-  }
-}
+//   if (response.ok) {
+//     fetchTasks();  // Refresh the task list after adding
+//     document.getElementById('task-form').reset();  // Clear form
+//   } else {
+//     alert('Failed to add task');
+//   }
+// }
 
 // Function to delete a task
 async function deleteTask(taskId) {

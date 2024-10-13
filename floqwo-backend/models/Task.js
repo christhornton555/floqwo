@@ -22,8 +22,12 @@ const taskSchema = new mongoose.Schema({
   completedAt: {
     type: Date
   },
-  dueDate: {  // New field for the due date (optional)
+  dueDate: {
     type: Date
+  },
+  tags: {
+    type: [String], // Array of strings for tags
+    default: [] // Default to an empty array if no tags are provided
   }
 });
 
