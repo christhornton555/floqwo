@@ -167,11 +167,21 @@ function renderTasks(tasks) {
       // Check if the task has a due date
       if (task.dueDate) {
         dueDate = `<div class="due-date">Due: ${formatDate(task.dueDate)}</div>`;
+
+        // Apply shading based on time passed percentage
+        const timePassedPercentage = calculateTimePassedPercentage(task.createdAt, task.dueDate);
+        if (timePassedPercentage >= 90) {
+          taskItem.style.backgroundColor = '#630000'; // 90% of the time passed
+        } else if (timePassedPercentage >= 80) {
+          taskItem.style.backgroundColor = '#260000'; // 80% of the time passed
+        }
       }
 
       // Check if the task is completed and format the completed date
       if (task.status === 'completed' && task.completedAt) {
         completedAt = `<div class="completed-date">Completed: ${formatDate(task.completedAt)}</div>`;
+        // Remove any background color for completed tasks
+        taskItem.style.backgroundColor = ''; 
       }
 
       // Create task content with date, title, description, and optionally the completed date, due date, and tags
