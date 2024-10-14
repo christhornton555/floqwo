@@ -73,6 +73,9 @@ function getSelectedTags() {
   if (document.getElementById('tag-work').checked) {
     tags.push('work');
   }
+  if (document.getElementById('tag-fast-stream').checked) {
+    tags.push('fast stream');
+  }
   if (document.getElementById('tag-priority').checked) {
     tags.push('priority');
   }
@@ -82,11 +85,13 @@ function getSelectedTags() {
   return tags;
 }
 
-// Function to apply tag styles
+// Function to apply tag styles - TODO - this should probably be defined in styles.css instead
 function getTagColor(tag) {
   switch(tag) {
     case 'work':
       return '#2196F3'; // Blue
+    case 'fast stream':
+      return '#912b88'; // Fast Stream purple
     case 'priority':
       return '#FF5722'; // Orange
     case 'dev':
@@ -160,6 +165,8 @@ function renderTasks(tasks) {
       let tags = '';
 
       // Check if the task has tags and render them
+      console.log("Tags:")
+      console.log(task.tags)
       if (task.tags) {
         tags = renderTags(task.tags);  // Render tags if present
       }
