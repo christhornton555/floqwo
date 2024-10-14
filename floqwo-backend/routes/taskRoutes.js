@@ -63,22 +63,28 @@ router.put('/tasks/:id', async (req, res) => {
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
 
-    // Update the due date if provided
+    // Handle due date update or removal
     if (req.body.dueDate) {
       task.dueDate = req.body.dueDate;
+    } else if (req.body.dueDate === null) {
+      task.dueDate = undefined;  // Remove due date if null
     }
 
-    // Check if the status is updated to "completed"
-    if (req.body.status === 'completed' && task.status !== 'completed') {
-      task.completedAt = Date.now();  // Set completedAt to the current date
+    // Handle tags update
+    if (req.body.tags) {
+      task.tags = req.body.tags; // Replace tags with the new ones
     }
 
-    // Update the status
-    task.status = req.body.status || task.status;
+    // Update the status if provided
+    if (req.body.status) {
+      task.status = req.body.status;
+      if (task.status === 'completed') {
+        task.completedAt = Date.now();  // Set completedAt date
+      }
+    }
 
     // Save the updated task
     const updatedTask = await task.save();
-
     res.json(updatedTask);
   } catch (err) {
     res.status(500).json({ error: 'Error updating task' });
