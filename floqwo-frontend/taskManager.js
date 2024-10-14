@@ -283,43 +283,6 @@ function applyTimezoneOffsetToUTC(inputDateTime) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
-// // Function to add a new task
-// async function addTask(event) {
-//   event.preventDefault();
-
-//   const token = localStorage.getItem('token');
-//   const title = document.getElementById('task-title').value;
-//   const description = document.getElementById('task-description').value;
-//   const dueDateInput = document.getElementById('task-due-date').value;
-
-//   const taskData = {
-//     title,
-//     description
-//   };
-
-//   // If a due date is provided, adjust it by applying the timezone offset to UTC
-//   if (dueDateInput) {
-//     const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
-//     taskData.dueDate = adjustedDueDate;  // Store the adjusted date
-//   }
-
-//   const response = await fetch(apiUrl, {
-//     method: 'POST',
-//     headers: { 
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${token}`
-//     },
-//     body: JSON.stringify(taskData)
-//   });
-
-//   if (response.ok) {
-//     fetchTasks();  // Refresh the task list after adding
-//     document.getElementById('task-form').reset();  // Clear form
-//   } else {
-//     alert('Failed to add task');
-//   }
-// }
-
 // Function to delete a task
 async function deleteTask(taskId) {
   const token = localStorage.getItem('token');
