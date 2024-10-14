@@ -46,10 +46,22 @@ function formatDate(dateString) {
   return `${day}/${month}/${year}, ${hours}.${minutes}`;
 }
 
-// Function to sort tasks based on due date first, and creation date second
+// Function to sort tasks based on priority, due date first, and creation date second
 function sortTasks(tasks) {
   return tasks.sort((a, b) => {
-    // If both tasks have due dates, sort by due date (earliest first)
+    // Check if both tasks have the "priority" tag
+    const aHasPriority = a.tags && a.tags.includes('priority');
+    const bHasPriority = b.tags && b.tags.includes('priority');
+
+    // If one task has the "priority" tag, it should come first
+    if (aHasPriority && !bHasPriority) {
+      return -1;
+    }
+    if (!aHasPriority && bHasPriority) {
+      return 1;
+    }
+
+    // If both or neither have the "priority" tag, sort by due date (earliest first)
     if (a.dueDate && b.dueDate) {
       return new Date(a.dueDate) - new Date(b.dueDate);
     }
@@ -165,8 +177,6 @@ function renderTasks(tasks) {
       let tags = '';
 
       // Check if the task has tags and render them
-      console.log("Tags:")
-      console.log(task.tags)
       if (task.tags) {
         tags = renderTags(task.tags);  // Render tags if present
       }
@@ -175,12 +185,20 @@ function renderTasks(tasks) {
       if (task.dueDate) {
         dueDate = `<div class="due-date">Due: ${formatDate(task.dueDate)}</div>`;
 
-        // Apply shading based on time passed percentage
+        // Apply shading based on time passed percentage or priority
         const timePassedPercentage = calculateTimePassedPercentage(task.createdAt, task.dueDate);
         if (timePassedPercentage >= 90) {
           taskItem.style.backgroundColor = '#630000'; // 90% of the time passed
         } else if (timePassedPercentage >= 80) {
           taskItem.style.backgroundColor = '#260000'; // 80% of the time passed
+        }
+      }
+      
+      // Check if the task has a priority
+      if (task.tags) {
+        console.log(task.tags);
+        if (task.tags.includes('priority')) {
+          taskItem.style.backgroundColor = '#630000';
         }
       }
 
