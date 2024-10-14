@@ -79,20 +79,94 @@ function sortTasks(tasks) {
   });
 }
 
-// Function to get the selected tags
-function getSelectedTags() {
+// Function to open the edit modal and populate with task data
+function editTask(task) {
+  const modal = document.getElementById('editTaskModal');
+  modal.style.display = 'block'; // Show the modal
+
+  // Populate the form with the task's current data
+  document.getElementById('edit-task-title').value = task.title;
+  document.getElementById('edit-task-description').value = task.description;
+  
+  // Set due date, if it exists
+  if (task.dueDate) {
+    document.getElementById('edit-task-due-date').value = new Date(task.dueDate).toISOString().slice(0, 16);
+  } else {
+    document.getElementById('edit-task-due-date').value = '';  // Clear if no due date
+  }
+
+  // Set the tags
+  document.getElementById('edit-tag-work').checked = task.tags.includes('work');
+  document.getElementById('edit-tag-priority').checked = task.tags.includes('priority');
+  document.getElementById('edit-tag-dev').checked = task.tags.includes('dev');
+  document.getElementById('edit-tag-fast-stream').checked = task.tags.includes('fast stream');
+
+  // Update form submission to handle task editing
+  document.getElementById('edit-task-form').onsubmit = (event) => {
+    event.preventDefault();
+    updateTask(task._id);  // Call the update function with the task ID
+  };
+}
+
+// Function to close the modal
+function closeModal() {
+  const modal = document.getElementById('editTaskModal');
+  modal.style.display = 'none'; // Hide the modal
+}
+
+// Function to update a task
+async function updateTask(taskId) {
+  const token = localStorage.getItem('token');
+  const title = document.getElementById('edit-task-title').value;
+  const description = document.getElementById('edit-task-description').value;
+  const dueDateInput = document.getElementById('edit-task-due-date').value;
+  const tags = getSelectedEditTags();  // Get selected tags from the edit form
+
+  const taskData = {
+    title,
+    description,
+    tags
+  };
+
+  // If a due date is provided, adjust it by applying the timezone offset to UTC
+  if (dueDateInput) {
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+  } else {
+    taskData.dueDate = null;  // Remove due date if none is provided
+  }
+
+  const response = await fetch(`${apiUrl}/${taskId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(taskData)
+  });
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after updating
+    closeModal();  // Close the modal
+  } else {
+    alert('Failed to update task');
+  }
+}
+
+// Function to get the selected tags from the edit form
+function getSelectedEditTags() {
   const tags = [];
-  if (document.getElementById('tag-work').checked) {
+  if (document.getElementById('edit-tag-work').checked) {
     tags.push('work');
   }
-  if (document.getElementById('tag-fast-stream').checked) {
-    tags.push('fast stream');
-  }
-  if (document.getElementById('tag-priority').checked) {
+  if (document.getElementById('edit-tag-priority').checked) {
     tags.push('priority');
   }
-  if (document.getElementById('tag-dev').checked) {
+  if (document.getElementById('edit-tag-dev').checked) {
     tags.push('dev');
+  }
+  if (document.getElementById('edit-tag-fast-stream').checked) {
+    tags.push('fast stream');
   }
   return tags;
 }
@@ -241,6 +315,13 @@ function renderTasks(tasks) {
       deleteButton.classList.add('delete-btn');
       deleteButton.onclick = () => deleteTask(task._id);
       buttonContainer.appendChild(deleteButton);
+
+      // Add an edit button to edit the task
+      const editButton = document.createElement('button');
+      editButton.innerText = 'Edit';
+      editButton.classList.add('edit-btn');
+      editButton.onclick = () => editTask(task);  // Pass the task object to the edit function
+      buttonContainer.appendChild(editButton);
 
       // Append the button container to the task item
       taskItem.appendChild(buttonContainer);

@@ -27,6 +27,27 @@
     <br><button type="submit">Add Task</button>
   </form>
 
+  <!-- Edit Task Modal -->
+  <div id="editTaskModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Edit Task</h2>
+      <form id="edit-task-form">
+        <input type="text" id="edit-task-title" placeholder="Task Title" required>
+        <input type="text" id="edit-task-description" placeholder="Task Description" required>
+        <input type="datetime-local" id="edit-task-due-date" placeholder="Due Date (optional)">
+
+        <!-- Tag selection -->
+        <br><label>Tags:</label><br>
+        <input type="checkbox" id="edit-tag-work" value="work"> Work
+        <input type="checkbox" id="edit-tag-priority" value="priority"> Priority
+        <input type="checkbox" id="edit-tag-dev" value="dev"> Dev
+        <input type="checkbox" id="edit-tag-fast-stream" value="fast stream"> Fast Stream
+
+        <br><button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
 
   <!-- Filter buttons -->
   <div id="task-filters">
