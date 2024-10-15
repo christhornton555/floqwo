@@ -1,16 +1,26 @@
 // Core task-handling module
 
-import { fetchTasks, deleteTask, addTask, updateTask } from './api.js';
-import { renderTasks } from './taskRender.js';
-import { handleAddTask, handleEditTask, getSelectedTags } from './taskForm.js';
-import { showEditModal, closeModal } from './taskModal.js';
+// Ensure token is valid on page load
+function checkToken() {
+  const token = localStorage.getItem('token');
+  const expiration = localStorage.getItem('tokenExpiration');
 
-let token = localStorage.getItem('token');
+  if (!token || Date.now() > expiration) {
+    window.location.href = 'login.html';
+  }
+}
 
-// Fetch and render tasks on page load
-document.addEventListener('DOMContentLoaded', () => {
-  fetchTasks(token).then(tasks => renderTasks(tasks));
-});
+// Call this function on page load
+checkToken();
 
-// Set up form listeners
-document.getElementById('task-form').addEventListener('submit', (event) => handleAddTask(event, token));
+// Set filter and fetch tasks based on filter
+function setFilter(filter) {
+  currentFilter = filter;
+  fetchTasks(); 
+}
+
+// Event listener for form submission
+document.getElementById('task-form').addEventListener('submit', addTask);
+
+// Fetch tasks when the page loads
+fetchTasks();

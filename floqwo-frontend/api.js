@@ -2,33 +2,53 @@
 
 const apiUrl = 'https://floqwo-796cad1ba057.herokuapp.com/api/tasks'; // Your backend API
 
-// Fetch tasks
-async function fetchTasks(token) {
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+// Function to make a secure API request for tasks
+async function fetchTasks() {
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch tasks');
     }
-  });
-  return response.ok ? response.json() : Promise.reject('Error fetching tasks');
+
+    const tasks = await response.json();
+    renderTasks(tasks);  // Call render function from taskRender.js
+  } catch (error) {
+    document.getElementById('error-message').innerText = 'Error fetching tasks. Please try again later.';
+    document.getElementById('error-message').style.display = 'block';
+    console.error('Error fetching tasks:', error);
+  }
 }
 
-// Add a new task
-async function addTask(token, taskData) {
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(taskData)
-  });
-  return response.ok ? response.json() : Promise.reject('Error adding task');
-}
+// Function to update a task
+async function updateTask(taskId) {
+  const token = localStorage.getItem('token');
+  const title = document.getElementById('edit-task-title').value;
+  const description = document.getElementById('edit-task-description').value;
+  const dueDateInput = document.getElementById('edit-task-due-date').value;
+  const tags = getSelectedEditTags();  // Get selected tags from the edit form
 
-// Update task
-async function updateTask(token, taskId, taskData) {
+  const taskData = {
+    title,
+    description,
+    tags
+  };
+
+  if (dueDateInput) {
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+  } else {
+    taskData.dueDate = null;  // Remove due date if none is provided
+  }
+
   const response = await fetch(`${apiUrl}/${taskId}`, {
     method: 'PUT',
     headers: {
@@ -37,18 +57,67 @@ async function updateTask(token, taskId, taskData) {
     },
     body: JSON.stringify(taskData)
   });
-  return response.ok ? response.json() : Promise.reject('Error updating task');
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after updating
+    closeModal();  // Close the modal
+  } else {
+    alert('Failed to update task');
+  }
 }
 
-// Delete task
-async function deleteTask(token, taskId) {
+// Function to delete a task
+async function deleteTask(taskId) {
+  const token = localStorage.getItem('token');
+
   const response = await fetch(`${apiUrl}/${taskId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
     }
   });
-  return response.ok ? response.json() : Promise.reject('Error deleting task');
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after deletion
+  } else {
+    alert('Failed to delete task');
+  }
 }
 
-export { fetchTasks, addTask, updateTask, deleteTask };
+// Function to add a new task
+async function addTask(event) {
+  event.preventDefault();
+
+  const token = localStorage.getItem('token');
+  const title = document.getElementById('task-title').value;
+  const description = document.getElementById('task-description').value;
+  const dueDateInput = document.getElementById('task-due-date').value;
+  const tags = getSelectedTags(); // Get selected tags
+
+  const taskData = {
+    title,
+    description,
+    tags
+  };
+
+  if (dueDateInput) {
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+  }
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(taskData)
+  });
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after adding
+    document.getElementById('task-form').reset();  // Clear form
+  } else {
+    alert('Failed to add task');
+  }
+}
