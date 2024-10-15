@@ -13,6 +13,8 @@ function checkToken() {
 // Call this function on page load
 checkToken();
 
+let currentFilter = 'pending';  // Make this globally accessible
+
 // Set filter and fetch tasks based on filter
 function setFilter(filter) {
   currentFilter = filter;

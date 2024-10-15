@@ -1,5 +1,21 @@
 // Render tasks on the page
 
+// Function to apply tag styles - TODO - this should probably be defined in styles.css instead
+function getTagColor(tag) {
+  switch(tag) {
+    case 'work':
+      return '#2196F3'; // Blue
+    case 'fast stream':
+      return '#912b88'; // Fast Stream purple
+    case 'priority':
+      return '#FF5722'; // Orange
+    case 'dev':
+      return '#4CAF50'; // Green
+    default:
+      return '#000'; // Default black for unhandled tags
+  }
+}
+
 // Function to render tags
 function renderTags(tags) {
   if (!tags || tags.length === 0) return '';

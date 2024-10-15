@@ -84,6 +84,26 @@ async function deleteTask(taskId) {
   }
 }
 
+// Function to mark a task as complete
+async function completeTask(taskId) {
+  const token = localStorage.getItem('token');
+
+  const response = await fetch(`${apiUrl}/${taskId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ status: 'completed' })  // Update the task status to "completed"
+  });
+
+  if (response.ok) {
+    fetchTasks();  // Refresh the task list after marking as complete
+  } else {
+    alert('Failed to mark task as complete');
+  }
+}
+
 // Function to add a new task
 async function addTask(event) {
   event.preventDefault();
