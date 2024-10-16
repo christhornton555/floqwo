@@ -1,13 +1,13 @@
 // API functions
 
-const apiUrl = 'https://floqwo-796cad1ba057.herokuapp.com/api/tasks'; // Your backend API
+const apiUrl = 'https://floqwo-796cad1ba057.herokuapp.com/api'; // Backend API
 
 // Function to make a secure API request for tasks
 async function fetchTasks() {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(`${apiUrl}/tasks`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -49,7 +49,7 @@ async function updateTask(taskId) {
     taskData.dueDate = null;  // Remove due date if none is provided
   }
 
-  const response = await fetch(`${apiUrl}/${taskId}`, {
+  const response = await fetch(`${apiUrl}/tasks/${taskId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ async function updateTask(taskId) {
 async function deleteTask(taskId) {
   const token = localStorage.getItem('token');
 
-  const response = await fetch(`${apiUrl}/${taskId}`, {
+  const response = await fetch(`${apiUrl}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -88,7 +88,7 @@ async function deleteTask(taskId) {
 async function completeTask(taskId) {
   const token = localStorage.getItem('token');
 
-  const response = await fetch(`${apiUrl}/${taskId}`, {
+  const response = await fetch(`${apiUrl}/tasks/${taskId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -105,6 +105,43 @@ async function completeTask(taskId) {
 }
 
 // Function to add a new task
+// async function addTask(event) {
+//   event.preventDefault();
+
+//   const token = localStorage.getItem('token');
+//   const title = document.getElementById('task-title').value;
+//   const description = document.getElementById('task-description').value;
+//   const dueDateInput = document.getElementById('task-due-date').value;
+//   const tags = getSelectedTags(); // Get selected tags
+
+//   const taskData = {
+//     title,
+//     description,
+//     tags
+//   };
+
+//   if (dueDateInput) {
+//     const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
+//     taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+//   }
+
+//   const response = await fetch(apiUrl, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': `Bearer ${token}`
+//     },
+//     body: JSON.stringify(taskData)
+//   });
+
+//   if (response.ok) {
+//     fetchTasks();  // Refresh the task list after adding
+//     document.getElementById('task-form').reset();  // Clear form
+//   } else {
+//     alert('Failed to add task');
+//   }
+// }
+
 async function addTask(event) {
   event.preventDefault();
 
@@ -112,7 +149,7 @@ async function addTask(event) {
   const title = document.getElementById('task-title').value;
   const description = document.getElementById('task-description').value;
   const dueDateInput = document.getElementById('task-due-date').value;
-  const tags = getSelectedTags(); // Get selected tags
+  const tags = getSelectedTags();  // Collect selected tags
 
   const taskData = {
     title,
@@ -120,12 +157,13 @@ async function addTask(event) {
     tags
   };
 
+  // Handle due date if provided
   if (dueDateInput) {
-    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
-    taskData.dueDate = adjustedDueDate;  // Store the adjusted date
+    const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);
+    taskData.dueDate = adjustedDueDate;
   }
 
-  const response = await fetch(apiUrl, {
+  const response = await fetch('/api/tasks', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -135,8 +173,8 @@ async function addTask(event) {
   });
 
   if (response.ok) {
-    fetchTasks();  // Refresh the task list after adding
-    document.getElementById('task-form').reset();  // Clear form
+    fetchTasks();  // Refresh task list
+    document.getElementById('task-form').reset();  // Clear the form
   } else {
     alert('Failed to add task');
   }
