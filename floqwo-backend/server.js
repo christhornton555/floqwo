@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');  // Import cors
 const jwt = require('jsonwebtoken'); // Import JWT
 const taskRoutes = require('./routes/taskRoutes');
+const tagRoutes = require('./routes/tagRoutes');
 const dotenv = require('dotenv');
 
 // Load environment variables from .env file
@@ -69,6 +70,9 @@ app.use('/api', verifyToken);
 
 // Use the task routes for any requests to /api
 app.use('/api', taskRoutes);
+
+// Use the tag routes
+app.use('/api', tagRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
