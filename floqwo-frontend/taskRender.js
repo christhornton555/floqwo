@@ -78,20 +78,20 @@ function renderTasks(tasks) {
 
       if (task.status === 'pending') {
         const completeButton = document.createElement('button');
-        completeButton.innerText = 'Complete';
+        completeButton.innerHTML = '<span class="material-icons">check</span>';  // Material icon for "check"
         completeButton.classList.add('complete-btn');
         completeButton.onclick = () => completeTask(task._id);
         buttonContainer.appendChild(completeButton);
       }
 
       const deleteButton = document.createElement('button');
-      deleteButton.innerText = 'Delete';
+      deleteButton.innerHTML = '<span class="material-icons">delete</span>';  // Material icon for "delete"
       deleteButton.classList.add('delete-btn');
       deleteButton.onclick = () => deleteTask(task._id);
       buttonContainer.appendChild(deleteButton);
 
       const editButton = document.createElement('button');
-      editButton.innerText = 'Edit';
+      editButton.innerHTML = '<span class="material-icons">edit</span>';  // Material icon for "edit"
       editButton.classList.add('edit-btn');
       editButton.onclick = () => editTask(task);
       buttonContainer.appendChild(editButton);
