@@ -28,6 +28,9 @@
     <br><button type="submit">Add Task</button>
   </form>
 
+  <!-- Button to open Tag modal -->
+  <button id="openTagModal">Tags</button>
+
   <!-- Edit Task Modal -->
   <div id="editTaskModal" class="modal">
     <div class="modal-content">
@@ -49,6 +52,24 @@
         <div id="tag-container"></div>
 
         <br><button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for Adding Tags -->
+  <div id="tagModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeTagModal">&times;</span>
+      <h2>Add New Tag</h2>
+      
+      <form id="tag-form">
+        <label for="tag-name">Tag Name:</label>
+        <input type="text" id="tag-name" required>
+
+        <label for="tag-color">Tag Color:</label>
+        <input type="color" id="tag-color" required>
+
+        <button type="submit">Add Tag</button>
       </form>
     </div>
   </div>

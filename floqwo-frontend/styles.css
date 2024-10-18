@@ -178,6 +178,7 @@ li button.delete-btn:hover {
   cursor: pointer;
 }
 
+
 /* Media Query for Narrow Screens (phones) */
 @media (max-width: 600px) {
   /* Stack buttons vertically on narrow screens */
