@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Floqwo Task Manager</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,9 +18,9 @@
     <input type="text" id="task-description" placeholder="Task Description" required>
     <input type="datetime-local" id="task-due-date" placeholder="Due Date (optional)">
 
-    <!-- Tag selection -->
+    <!-- Tag selection for Add Task -->
     <br><label>Tags:</label><br>
-    <div id="tag-container"></div>
+    <div id="add-tag-container"></div> <!-- Unique ID for Add Task tags -->
 
     <br><button type="submit">Add Task</button>
   </form>
@@ -38,15 +38,9 @@
         <input type="text" id="edit-task-description" placeholder="Task Description" required>
         <input type="datetime-local" id="edit-task-due-date" placeholder="Due Date (optional)">
 
-        <!-- Tag selection -->
+        <!-- Tag selection for Edit Task -->
         <br><label>Tags:</label><br>
-        <input type="checkbox" id="edit-tag-work" value="work"> Work
-        <input type="checkbox" id="edit-tag-priority" value="priority"> Priority
-        <input type="checkbox" id="edit-tag-dev" value="dev"> Dev
-        <input type="checkbox" id="edit-tag-fast-stream" value="fast stream"> Fast Stream
-
-        <!-- Tags container -->
-        <div id="tag-container"></div>
+        <div id="edit-tag-container"></div> <!-- Unique ID for Edit Task tags -->
 
         <br><button type="submit">Save Changes</button>
       </form>
@@ -82,6 +76,7 @@
   <h2>Your Tasks</h2>
   <ul id="task-list"></ul>
 
+  <!-- Script files -->
   <script src="api.js"></script>
   <script src="taskUtils.js"></script>
   <script src="taskRender.js"></script>
