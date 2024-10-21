@@ -1,31 +1,43 @@
 // Render tasks on the page
 
-// Function to apply tag styles - TODO - this should probably be defined in styles.css instead
-function getTagColor(tag) {
-  switch(tag) {
-    case 'work':
-      return '#2196F3'; // Blue
-    case 'fast stream':
-      return '#912b88'; // Fast Stream purple
-    case 'priority':
-      return '#FF5722'; // Orange
-    case 'dev':
-      return '#4CAF50'; // Green
-    default:
-      return '#000'; // Default black for unhandled tags
-  }
+// Function to get tag color from the database
+function getTagColorFromDatabase(tagName, availableTags) {
+  const tag = availableTags.find(t => t.name === tagName);
+  return tag ? tag.color : '#000';  // Default black if no color is found
 }
 
-// Function to render tags
-function renderTags(tags) {
+// Function to render tags with colors from the database
+function renderTags(tags, availableTags) {
   if (!tags || tags.length === 0) return '';
-  return tags.map(tag => `<span class="tag" style="background-color: ${getTagColor(tag)};">${tag}</span>`).join(' ');
+  
+  // Use the color fetched from the database for each tag
+  return tags.map(tag => {
+    const tagColor = getTagColorFromDatabase(tag, availableTags);
+    return `<span class="tag" style="background-color: ${tagColor};">${tag}</span>`;
+  }).join(' ');
 }
 
 // Function to render tasks into the DOM
-function renderTasks(tasks) {
+async function renderTasks(tasks) {
   const taskList = document.getElementById('task-list');
   taskList.innerHTML = ''; // Clear the task list
+
+  // Fetch available tags with colors from the database
+  const token = localStorage.getItem('token');
+  const availableTagsResponse = await fetch(`${apiUrl}/tags`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (!availableTagsResponse.ok) {
+    console.error('Failed to fetch available tags.');
+    return;
+  }
+
+  const availableTags = await availableTagsResponse.json();  // Load available tags
 
   const sortedTasks = sortTasks(tasks); // sortTasks from taskUtils.js
 
@@ -38,8 +50,9 @@ function renderTasks(tasks) {
       let dueDate = '';
       let tags = '';
 
+      // Render tags with their colors from the database
       if (task.tags) {
-        tags = renderTags(task.tags);  // renderTags from taskRender.js
+        tags = renderTags(task.tags, availableTags);  // Pass availableTags to renderTags
       }
 
       if (task.dueDate) {

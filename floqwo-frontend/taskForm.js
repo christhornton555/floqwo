@@ -1,15 +1,6 @@
 // Handle adding & editing tasks
 
 // Function to get selected tags from the add task form
-// function getSelectedTags() {
-//   const tags = [];
-//   if (document.getElementById('tag-work').checked) tags.push('work');
-//   if (document.getElementById('tag-fast-stream').checked) tags.push('fast stream');
-//   if (document.getElementById('tag-priority').checked) tags.push('priority');
-//   if (document.getElementById('tag-dev').checked) tags.push('dev');
-//   return tags;
-// }
-
 function getSelectedTags() {
   const tagContainer = document.getElementById('tag-container');
   const selectedTags = [];
@@ -66,14 +57,18 @@ async function loadTags() {
       label.htmlFor = `tag-${tag.name}`;
       label.textContent = tag.name;
 
+      // Set the background color of the label to the color stored in the database
+      label.style.backgroundColor = tag.color;
+
       tagContainer.appendChild(checkbox);
       tagContainer.appendChild(label);
       tagContainer.appendChild(document.createElement('br'));  // Line break
     });
   } catch (error) {
     console.error('Error loading tags:', error);
+    alert('Error loading tags');
   }
 }
 
-// Call this function when loading the task creation/edit form
-loadTags();
+// Call the loadTags function when the page loads
+document.addEventListener('DOMContentLoaded', loadTags);
