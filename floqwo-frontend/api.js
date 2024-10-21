@@ -104,44 +104,6 @@ async function completeTask(taskId) {
   }
 }
 
-// Function to add a new task
-// async function addTask(event) {
-//   event.preventDefault();
-
-//   const token = localStorage.getItem('token');
-//   const title = document.getElementById('task-title').value;
-//   const description = document.getElementById('task-description').value;
-//   const dueDateInput = document.getElementById('task-due-date').value;
-//   const tags = getSelectedTags(); // Get selected tags
-
-//   const taskData = {
-//     title,
-//     description,
-//     tags
-//   };
-
-//   if (dueDateInput) {
-//     const adjustedDueDate = applyTimezoneOffsetToUTC(dueDateInput);  // Apply timezone offset
-//     taskData.dueDate = adjustedDueDate;  // Store the adjusted date
-//   }
-
-//   const response = await fetch(apiUrl, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${token}`
-//     },
-//     body: JSON.stringify(taskData)
-//   });
-
-//   if (response.ok) {
-//     fetchTasks();  // Refresh the task list after adding
-//     document.getElementById('task-form').reset();  // Clear form
-//   } else {
-//     alert('Failed to add task');
-//   }
-// }
-
 async function addTask(event) {
   event.preventDefault();
 
