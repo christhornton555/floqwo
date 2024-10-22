@@ -2,13 +2,12 @@
 
 // Function to get selected tags from the add task form
 function getSelectedTags() {
-  const tagContainer = document.getElementById('add-tag-container');
   const selectedTags = [];
-  const inputs = tagContainer.querySelectorAll('input[type="checkbox"]');
+  const tagButtons = document.querySelectorAll('#add-tag-container .tag');
 
-  inputs.forEach(input => {
-    if (input.checked) {
-      selectedTags.push(input.value);
+  tagButtons.forEach(tagButton => {
+    if (tagButton.classList.contains('selected')) {
+      selectedTags.push(tagButton.dataset.tag);  // Use the dataset to retrieve the tag name
     }
   });
 
@@ -17,20 +16,19 @@ function getSelectedTags() {
 
 // Function to get selected tags from the edit form
 function getSelectedEditTags() {
-  const tagContainer = document.getElementById('edit-tag-container');
   const selectedTags = [];
-  const inputs = tagContainer.querySelectorAll('input[type="checkbox"]');
+  const tagButtons = document.querySelectorAll('#edit-tag-container .tag');
 
-  inputs.forEach(input => {
-    if (input.checked) {
-      selectedTags.push(input.value);
+  tagButtons.forEach(tagButton => {
+    if (tagButton.classList.contains('selected')) {
+      selectedTags.push(tagButton.dataset.tag);  // Use the dataset to retrieve the tag name
     }
   });
 
   return selectedTags;
 }
 
-// Function to load available tags into both Add and Edit forms
+// Function to load available tags into both Add and Edit forms as buttons
 async function loadTags() {
   try {
     const token = localStorage.getItem('token');  // Get token from localStorage
@@ -54,43 +52,13 @@ async function loadTags() {
     editTagContainer.innerHTML = ''; // Clear any existing tag options in Edit Task
 
     tags.forEach(tag => {
-      // Create a checkbox for each tag in Add Task form
-      const addCheckbox = document.createElement('input');
-      addCheckbox.type = 'checkbox';
-      addCheckbox.value = tag.name;
-      addCheckbox.id = `add-tag-${tag.name}`;
+      // Create a button-like tag for each tag in Add Task form
+      const addTagButton = createTagButton(tag);
+      addTagContainer.appendChild(addTagButton);
 
-      const addLabel = document.createElement('label');
-      addLabel.htmlFor = `add-tag-${tag.name}`;
-      addLabel.textContent = tag.name;
-
-      // Set the background color of the label to the color stored in the database
-      addLabel.style.backgroundColor = tag.color;
-      addLabel.style.color = getContrastYIQ(tag.color); // Optional: Set text color based on background
-
-      // Append to Add Task form
-      addTagContainer.appendChild(addCheckbox);
-      addTagContainer.appendChild(addLabel);
-      addTagContainer.appendChild(document.createElement('br'));  // Line break
-
-      // Create a checkbox for each tag in Edit Task form
-      const editCheckbox = document.createElement('input');
-      editCheckbox.type = 'checkbox';
-      editCheckbox.value = tag.name;
-      editCheckbox.id = `edit-tag-${tag.name}`;
-
-      const editLabel = document.createElement('label');
-      editLabel.htmlFor = `edit-tag-${tag.name}`;
-      editLabel.textContent = tag.name;
-
-      // Set the background color of the label to the color stored in the database
-      editLabel.style.backgroundColor = tag.color;
-      editLabel.style.color = getContrastYIQ(tag.color); // Optional: Set text color based on background
-
-      // Append to Edit Task form
-      editTagContainer.appendChild(editCheckbox);
-      editTagContainer.appendChild(editLabel);
-      editTagContainer.appendChild(document.createElement('br'));  // Line break
+      // Create a button-like tag for each tag in Edit Task form
+      const editTagButton = createTagButton(tag);
+      editTagContainer.appendChild(editTagButton);
     });
   } catch (error) {
     console.error('Error loading tags:', error);
@@ -98,14 +66,30 @@ async function loadTags() {
   }
 }
 
+// Function to create a button-like tag element
+function createTagButton(tag) {
+  const tagButton = document.createElement('span');
+  tagButton.classList.add('tag');
+  tagButton.textContent = tag.name;
+  tagButton.style.backgroundColor = tag.color;
+  tagButton.dataset.tag = tag.name;  // Store the tag name in a dataset attribute
+
+  // Add click event to toggle the selected state
+  tagButton.addEventListener('click', () => {
+    tagButton.classList.toggle('selected');  // Toggle the "selected" class
+  });
+
+  return tagButton;
+}
+
 // Utility function to determine text color based on background color for better readability
 // TODO - Move this to the other util functions script
-function getContrastYIQ(hexcolor){
+function getContrastYIQ(hexcolor) {
   hexcolor = hexcolor.replace("#", "");
-  const r = parseInt(hexcolor.substr(0,2),16);
-  const g = parseInt(hexcolor.substr(2,2),16);
-  const b = parseInt(hexcolor.substr(4,2),16);
-  const yiq = ((r*299)+(g*587)+(b*114))/1000;
+  const r = parseInt(hexcolor.substr(0, 2), 16);
+  const g = parseInt(hexcolor.substr(2, 2), 16);
+  const b = parseInt(hexcolor.substr(4, 2), 16);
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
   return (yiq >= 200) ? 'black' : 'white';
 }
 
@@ -129,9 +113,9 @@ function editTask(task) {
   // Load available tags and mark the selected ones
   loadTags().then(() => {
     task.tags.forEach(tag => {
-      const checkbox = document.getElementById(`edit-tag-${tag}`);
-      if (checkbox) {
-        checkbox.checked = true;  // Mark the tag as selected if it belongs to the task
+      const tagButton = document.querySelector(`#edit-tag-container .tag[data-tag="${tag}"]`);
+      if (tagButton) {
+        tagButton.classList.add('selected');  // Mark the tag as selected if it belongs to the task
       }
     });
   });

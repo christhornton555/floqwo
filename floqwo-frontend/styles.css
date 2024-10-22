@@ -90,6 +90,20 @@ li.completed span {
   border-radius: 5px;
   margin-right: 5px;
   margin-bottom: 5px;
+  cursor: pointer;  /* Make it clear that the tag is clickable */
+  transition: outline 0.3s ease;  /* Smooth transition for the outline */
+}
+
+/* Add a white outline when the tag is selected */
+.tag.selected {
+  outline: 2px solid #fff;  /* White outline for selected tags */
+}
+
+#add-tag-container {
+  margin-top: 5px; /* Space between "Tags:" and the tags */
+}
+#edit-tag-container {
+  margin-top: 5px; /* Space between "Tags:" and the tags */
 }
 
 /* Complete Button */
