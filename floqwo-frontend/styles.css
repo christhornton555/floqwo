@@ -95,6 +95,7 @@ li.completed span {
 /* Complete Button */
 li button.complete-btn {
   background-color: #4caf50; /* Green button for marking complete */
+  margin-left: 5px;
 }
 
 li button.complete-btn:hover {
@@ -104,10 +105,16 @@ li button.complete-btn:hover {
 /* Delete Button */
 li button.delete-btn {
   background-color: #ff4d4d; /* Red button for delete */
+  margin-left: 5px;
 }
 
 li button.delete-btn:hover {
   background-color: #e60000; /* Darker red on hover */
+}
+
+/* Edit Button (mostly uses default button format) */
+li button.edit-btn {
+  margin-left: 5px;
 }
 
 /* Styling for the task creation date */
