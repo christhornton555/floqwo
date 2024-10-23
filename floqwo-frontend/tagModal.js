@@ -2,15 +2,21 @@
 const tagModal = document.getElementById('tagModal');
 const openTagModalBtn = document.getElementById('openTagModal');
 const closeTagModalBtn = document.getElementById('closeTagModal');
-const tagColorInput = document.getElementById('tag-color'); // Select the color input
+let editingTagId = null;  // Keep track of which tag is being edited
 
-// Function to open the modal
+// Function to open the modal for adding a new tag
 openTagModalBtn.onclick = function() {
-  // Set a default color if none is set
-  if (!tagColorInput.value) {
-    tagColorInput.value = '#000000';  // Default to black if no color is set
-  }
-  
+  editingTagId = null;  // Reset editing mode
+  document.getElementById('tag-name').value = '';  // Clear previous values
+  document.getElementById('tag-color').value = '#ffffff';  // Reset to default color
+  tagModal.style.display = 'block';
+}
+
+// Function to open the modal for editing a tag
+function openEditTagModal(tag) {
+  editingTagId = tag._id;  // Set the tag ID for editing
+  document.getElementById('tag-name').value = tag.name;
+  document.getElementById('tag-color').value = tag.color;
   tagModal.style.display = 'block';
 }
 
@@ -26,42 +32,58 @@ window.onclick = function(event) {
   }
 }
 
-// Function to handle adding a new tag
-async function addTag(event) {
+// Function to handle adding or editing a tag
+async function addOrEditTag(event) {
   event.preventDefault();
-
+  
   const tagName = document.getElementById('tag-name').value;
   const tagColor = document.getElementById('tag-color').value;
-
+  
   const tagData = {
     name: tagName,
     color: tagColor
   };
-
+  
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${apiUrl}/tags`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(tagData)
-    });
+    
+    let response;
+    if (editingTagId) {
+      // Edit the existing tag
+      response = await fetch(`${apiUrl}/tags/${editingTagId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(tagData)
+      });
+    } else {
+      // Create a new tag
+      response = await fetch(`${apiUrl}/tags`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(tagData)
+      });
+    }
 
     if (response.ok) {
-      alert('Tag added successfully!');
+      alert('Tag saved successfully!');
       document.getElementById('tag-form').reset();  // Reset the form
       loadTags();  // Reload the tags in the task form (this will update tag checkboxes)
+      renderFilterTagButtons();  // Reload the filter tag buttons
       tagModal.style.display = 'none';  // Close the modal
     } else {
-      alert('Failed to add tag');
+      alert('Failed to save tag');
     }
   } catch (error) {
-    console.error('Error adding tag:', error);
-    alert('Error adding tag');
+    console.error('Error saving tag:', error);
+    alert('Error saving tag');
   }
 }
 
 // Event listener for tag form submission
-document.getElementById('tag-form').addEventListener('submit', addTag);
+document.getElementById('tag-form').addEventListener('submit', addOrEditTag);
