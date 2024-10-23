@@ -79,7 +79,10 @@
           <option value="">-- Select a tag --</option>
           <!-- Tags will be dynamically populated here -->
         </select>
-        
+
+        <!-- Hidden input to store the original tag name -->
+        <input type="hidden" id="original-tag-name">
+
         <label for="edit-tag-name">Tag Name:</label>
         <input type="text" id="edit-tag-name" required>
 
@@ -90,7 +93,6 @@
       </form>
     </div>
   </div>
-
 
   <!-- Tag Filter buttons -->
   <div id="tag-filters">

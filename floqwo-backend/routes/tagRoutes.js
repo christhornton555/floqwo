@@ -45,7 +45,7 @@ router.put('/tags/:id', async (req, res) => {
     // Update all tasks that have the old tag name
     await Task.updateMany(
       { tags: oldTagName },  // Find tasks with the old tag name
-      { $set: { 'tags.$': name } }  // Update the tag in the task
+      { $set: { 'tags.$': name } }  // Update the tag in the tasks
     );
 
     res.json(tag);
@@ -58,6 +58,13 @@ router.put('/tags/:id', async (req, res) => {
 router.delete('/tags/:id', async (req, res) => {
   try {
     await Tag.findByIdAndDelete(req.params.id);
+
+    // Optionally: You may want to update tasks to remove the deleted tag
+    await Task.updateMany(
+      { tags: req.params.id },
+      { $pull: { tags: req.params.id } }  // Remove the deleted tag from all tasks
+    );
+
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ error: 'Error deleting tag' });

@@ -1,6 +1,6 @@
 // Open and Close Modal
 const editTagModal = document.getElementById('editTagModal');
-const openEditTagModalBtn = document.getElementById('openEditTagModal'); // New button for opening the edit modal
+const openEditTagModalBtn = document.getElementById('openEditTagModal'); // Button to open the edit tag modal
 const closeEditTagModalBtn = document.getElementById('closeEditTagModal');
 let editingTagId = null;  // Keep track of which tag is being edited
 
@@ -9,6 +9,7 @@ openEditTagModalBtn.onclick = function() {
   editingTagId = null;  // Reset editing mode
   document.getElementById('edit-tag-name').value = '';  // Clear previous values
   document.getElementById('edit-tag-color').value = '#ffffff';  // Reset to default color
+  document.getElementById('original-tag-name').value = '';  // Clear the original tag name
   loadTagOptions(); // Load the tags into the dropdown
   editTagModal.style.display = 'block';
 }
@@ -60,6 +61,7 @@ async function loadTagOptions() {
       if (selectedTag) {
         document.getElementById('edit-tag-name').value = selectedTag.name;
         document.getElementById('edit-tag-color').value = selectedTag.color;
+        document.getElementById('original-tag-name').value = selectedTag.name; // Store original name
         editingTagId = selectedTagId;  // Set the editing tag ID
       }
     });
@@ -75,7 +77,8 @@ async function addOrEditTag(event) {
   
   const tagName = document.getElementById('edit-tag-name').value;
   const tagColor = document.getElementById('edit-tag-color').value;
-  
+  const originalTagName = document.getElementById('original-tag-name').value; // Original name
+
   const tagData = {
     name: tagName,
     color: tagColor
@@ -95,24 +98,52 @@ async function addOrEditTag(event) {
         },
         body: JSON.stringify(tagData)
       });
-    } else {
-      // We shouldn't reach here since this is the edit modal
-      alert('Error: No tag selected for editing.');
-      return;
-    }
 
-    if (response.ok) {
-      alert('Tag updated successfully!');
-      loadTags();  // Reload the tags in the task form
-      renderFilterTagButtons();  // Reload the filter tag buttons
-      renderTasks();  // Reload tasks to reflect updated tag info
-      editTagModal.style.display = 'none';  // Close the modal
+      if (response.ok) {
+        // Check if the tag name has changed
+        if (originalTagName !== tagName) {
+          // If the name has changed, update all tasks with the new tag name
+          await updateTasksWithNewTagName(originalTagName, tagName);
+        }
+
+        alert('Tag updated successfully!');
+        loadTags();  // Reload the tags in the task form
+        renderFilterTagButtons();  // Reload the filter tag buttons
+        renderTasks();  // Reload tasks to reflect updated tag info
+        editTagModal.style.display = 'none';  // Close the modal
+      } else {
+        alert('Failed to update tag');
+      }
     } else {
-      alert('Failed to update tag');
+      alert('Error: No tag selected for editing.');
     }
   } catch (error) {
     console.error('Error updating tag:', error);
     alert('Error updating tag');
+  }
+}
+
+// Function to update all tasks with the new tag name
+async function updateTasksWithNewTagName(oldTagName, newTagName) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${apiUrl}/tasks/updateTagName`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ oldTagName, newTagName })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update tasks with new tag name');
+    }
+
+    console.log(`Tasks updated with new tag name: ${newTagName}`);
+  } catch (error) {
+    console.error('Error updating tasks with new tag name:', error);
+    alert('Error updating tasks');
   }
 }
 
