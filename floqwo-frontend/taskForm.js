@@ -72,18 +72,19 @@ function createTagButton(tag) {
   tagButton.classList.add('tag');
   tagButton.textContent = tag.name;
   tagButton.style.backgroundColor = tag.color;
+  tagButton.style.color = getContrastYIQ(tag.color);  // Set text color based on background color
   tagButton.dataset.tag = tag.name;  // Store the tag name in a dataset attribute
 
   // Add click event to toggle the selected state
   tagButton.addEventListener('click', () => {
     tagButton.classList.toggle('selected');  // Toggle the "selected" class
+    tagButton.style.outline = tagButton.classList.contains('selected') ? '2px solid white' : 'none'; // Toggle white outline
   });
 
   return tagButton;
 }
 
 // Utility function to determine text color based on background color for better readability
-// TODO - Move this to the other util functions script
 function getContrastYIQ(hexcolor) {
   hexcolor = hexcolor.replace("#", "");
   const r = parseInt(hexcolor.substr(0, 2), 16);
@@ -116,6 +117,7 @@ function editTask(task) {
       const tagButton = document.querySelector(`#edit-tag-container .tag[data-tag="${tag}"]`);
       if (tagButton) {
         tagButton.classList.add('selected');  // Mark the tag as selected if it belongs to the task
+        tagButton.style.outline = '2px solid white';  // Add white outline for selected tags
       }
     });
   });
