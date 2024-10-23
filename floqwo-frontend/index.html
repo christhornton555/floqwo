@@ -25,8 +25,9 @@
     <br><button type="submit">Add Task</button>
   </form>
 
-  <!-- Button to open Tag modal -->
+  <!-- Buttons to open Tag modals -->
   <button id="openTagModal">Add Tags</button><br><br>
+  <button id="openEditTagModal">Edit Tags</button><br><br> <!-- New button to open the Edit Tags modal -->
 
   <!-- Edit Task Modal -->
   <div id="editTaskModal" class="modal">
@@ -64,6 +65,32 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal for Editing Tags -->
+  <div id="editTagModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeEditTagModal">&times;</span>
+      <h2>Edit Tag</h2>
+      
+      <form id="edit-tag-form">
+        <!-- Dropdown to select the tag to edit -->
+        <label for="tag-select">Select Tag:</label>
+        <select id="tag-select" required>
+          <option value="">-- Select a tag --</option>
+          <!-- Tags will be dynamically populated here -->
+        </select>
+        
+        <label for="edit-tag-name">Tag Name:</label>
+        <input type="text" id="edit-tag-name" required>
+
+        <label for="edit-tag-color">Tag Color:</label>
+        <input type="color" id="edit-tag-color" required>
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
 
   <!-- Tag Filter buttons -->
   <div id="tag-filters">
