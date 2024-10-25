@@ -1,28 +1,10 @@
-// Open and Close Modals for Adding and Editing Tags
-const addTagModal = document.getElementById('tagModal');
-const openAddTagModalBtn = document.getElementById('openTagModal'); // Button to open the Add Tag modal
-const closeAddTagModalBtn = document.getElementById('closeTagModal');
-
+// Open and Close Edit Tag Modal
 const editTagModal = document.getElementById('editTagModal');
 const openEditTagModalBtn = document.getElementById('openEditTagModal'); // Button to open the Edit Tag modal
 const closeEditTagModalBtn = document.getElementById('closeEditTagModal');
-
 let editingTagId = null;  // Keep track of which tag is being edited
 
-// Function to open the Add Tag modal
-openAddTagModalBtn.onclick = function () {
-  editingTagId = null;  // Reset editing mode
-  document.getElementById('tag-name').value = '';  // Clear previous values
-  document.getElementById('tag-color').value = '#ffffff';  // Reset to default color
-  addTagModal.style.display = 'block';
-}
-
-// Function to close the Add Tag modal
-closeAddTagModalBtn.onclick = function () {
-  addTagModal.style.display = 'none';
-}
-
-// Function to open the Edit Tag modal
+// Function to open the modal for editing a tag
 openEditTagModalBtn.onclick = function () {
   editingTagId = null;  // Reset editing mode
   document.getElementById('edit-tag-name').value = '';  // Clear previous values
@@ -37,50 +19,10 @@ closeEditTagModalBtn.onclick = function () {
   editTagModal.style.display = 'none';
 }
 
-// Close modals when clicking outside of the modal content
+// Close Edit Tag modal when clicking outside of the modal content
 window.onclick = function (event) {
-  if (event.target === addTagModal) {
-    addTagModal.style.display = 'none';
-  } else if (event.target === editTagModal) {
+  if (event.target === editTagModal) {
     editTagModal.style.display = 'none';
-  }
-}
-
-// Function to handle adding a new tag
-async function addTag(event) {
-  event.preventDefault();
-
-  const tagName = document.getElementById('tag-name').value;
-  const tagColor = document.getElementById('tag-color').value;
-
-  const tagData = {
-    name: tagName,
-    color: tagColor
-  };
-
-  try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${apiUrl}/tags`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(tagData)
-    });
-
-    if (response.ok) {
-      alert('Tag added successfully!');
-      document.getElementById('tag-form').reset();  // Reset the form
-      loadTags();  // Reload the tags in the task form
-      renderFilterTagButtons();  // Reload the filter tag buttons
-      addTagModal.style.display = 'none';  // Close the modal
-    } else {
-      alert('Failed to add tag');
-    }
-  } catch (error) {
-    console.error('Error adding tag:', error);
-    alert('Error adding tag');
   }
 }
 
@@ -205,6 +147,5 @@ async function updateTasksWithNewTagName(oldTagName, newTagName) {
   }
 }
 
-// Event listeners for form submissions
-document.getElementById('tag-form').addEventListener('submit', addTag);
+// Event listener for tag form submission
 document.getElementById('edit-tag-form').addEventListener('submit', editTag);
