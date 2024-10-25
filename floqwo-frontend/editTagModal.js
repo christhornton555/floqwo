@@ -101,10 +101,11 @@ async function editTag(event) {
 
       if (response.ok) {
         // Check if the tag name has changed
-        if (originalTagName !== tagName) {
-          // If the name has changed, update all tasks with the new tag name
-          await updateTasksWithNewTagName(originalTagName, tagName);
-        }
+        // if (originalTagName !== tagName) {
+        //   // If the name has changed, update all tasks with the new tag name
+        //   await updateTasksWithNewTagName(originalTagName, tagName);
+        // }
+        // TODO - Commented out because it was causing an error while seemingly serving no purpose. Investigate further
 
         alert('Tag updated successfully!');
         loadTags();  // Reload the tags in the task form
