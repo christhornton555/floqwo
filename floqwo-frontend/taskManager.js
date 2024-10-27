@@ -21,8 +21,5 @@ function setFilter(filter) {
   fetchTasks(); 
 }
 
-// Event listener for form submission
-document.getElementById('task-form').addEventListener('submit', addTask);
-
 // Fetch tasks when the page loads
 fetchTasks();

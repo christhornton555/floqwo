@@ -13,17 +13,39 @@
   <div id="error-message" style="color:red; display:none;">Error: Invalid login or session expired.</div>
 
   <!-- Form to add a new task -->
-  <form id="task-form">
+  <!-- <form id="task-form">
     <input type="text" id="task-title" placeholder="Task Title" required>
     <input type="text" id="task-description" placeholder="Task Description" required>
-    <input type="datetime-local" id="task-due-date" placeholder="Due Date (optional)">
+    <input type="datetime-local" id="task-due-date" placeholder="Due Date (optional)"> -->
 
     <!-- Tag selection for Add Task -->
-    <br><label>Tags:</label><br>
-    <div id="add-tag-container"></div> <!-- Unique ID for Add Task tags -->
+    <!--<br><label>Tags:</label><br>
+    <div id="add-tag-container"></div> --> <!-- Unique ID for Add Task tags -->
 
-    <br><button type="submit">Add Task</button>
-  </form>
+    <!-- <br><button type="submit">Add Task</button>
+  </form> -->
+
+  <!-- Button to open Add Task Modal -->
+  <button id="openAddTaskModal">Add New Task</button><br><br>
+
+  <!-- Add Task Modal -->
+  <div id="addTaskModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeAddTaskModal">&times;</span>
+      <h2>Add New Task</h2>
+      <form id="add-task-form">
+        <input type="text" id="add-task-title" placeholder="Task Title" required>
+        <input type="text" id="add-task-description" placeholder="Task Description" required>
+        <input type="datetime-local" id="add-task-due-date" placeholder="Due Date (optional)">
+
+        <!-- Tag selection for Add Task -->
+        <br><label>Tags:</label><br>
+        <div id="add-tag-container"></div> <!-- Unique ID for Add Task tags -->
+
+        <br><button type="submit">Add Task</button>
+      </form>
+    </div>
+  </div>
 
   <!-- Buttons to open Tag modals -->
   <button id="openTagModal">Add Tags</button><br><br>
@@ -115,7 +137,8 @@
   <script src="api.js"></script>
   <script src="taskUtils.js"></script>
   <script src="taskRender.js"></script>
-  <script src="taskModal.js"></script>
+  <script src="addTaskModal.js"></script>
+  <script src="editTaskModal.js"></script>
   <script src="taskForm.js"></script>
   <script src="taskManager.js"></script>
   <script src="addTagModal.js"></script>
