@@ -3,27 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Floqwo Task Manager</title>
+  <title>Floqwo</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
+  <!-- Info Bar -->
+  <div id="info-bar">
+    <span id="current-date-time">--:-- --- --/--/----</span>
+    <span id="task-summary">0/0</span>
+  </div>
+
   <header>
-    <h1>Floqwo Task Manager</h1>
+    <h1>Floqwo</h1>
     <div class="button-group">
       <button id="openAddTaskModal">Add Task</button>
       <button id="openTagModal">Add Tag</button>
       <button id="openEditTagModal">Edit Tag</button>
     </div>
   </header>
+  <br>
 
   <div id="error-message" style="color:red; display:none;">Error: Invalid login or session expired.</div>
 
   <!-- Tag and Status Filters -->
   <section id="filters">
     <div id="tag-filters">
-      <label>Tags:</label>
+      <label>Filters:</label>
       <div id="filter-tag-container"></div>
     </div>
 
@@ -126,6 +133,7 @@
   <!-- Script files -->
   <script src="api.js"></script>
   <script src="taskUtils.js"></script>
+  <script src="infoBar.js"></script>
   <script src="taskRender.js"></script>
   <script src="addTaskModal.js"></script>
   <script src="editTaskModal.js"></script>

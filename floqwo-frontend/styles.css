@@ -6,6 +6,35 @@ body {
   color: #ffffff;
 }
 
+/* Info Bar Styling */
+#info-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  font-size: 14px;
+  position: fixed; /* Keep it at the top of the viewport */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width of the screen */
+  z-index: 10;
+  border-bottom: 1px solid #333;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+}
+
+/* Indent date/time and task summary */
+#current-date-time {
+  flex: 1;
+  padding-left: 15px; /* Indent from the left edge */
+}
+
+#task-summary {
+  flex: 1;
+  text-align: right;
+  padding-right: 40px; /* Indent from the right edge */
+}
+
 /* Heading Styles */
 h1, h2 {
   color: #ffffff;

@@ -20,7 +20,11 @@ async function fetchTasks() {
     }
 
     const tasks = await response.json();
-    renderTasks(tasks);  // Call render function from taskRender.js
+    // Call render function from taskRender.js
+    renderTasks(tasks);
+    // Trigger tasksUpdated event after fetching tasks
+    document.dispatchEvent(new Event('tasksUpdated'));
+    
   } catch (error) {
     document.getElementById('error-message').innerText = 'Error fetching tasks. Please try again later.';
     document.getElementById('error-message').style.display = 'block';
