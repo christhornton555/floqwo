@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');  // Import cors
-const jwt = require('jsonwebtoken'); // Import JWT
+const cors = require('cors');  
+const jwt = require('jsonwebtoken'); 
 const taskRoutes = require('./routes/taskRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const dotenv = require('dotenv');
@@ -12,12 +12,12 @@ dotenv.config();
 const app = express();
 
 // Enable CORS for all routes
-app.use(cors());  // Add this line to enable CORS
+app.use(cors());
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-// MongoDB connection (use the connection string from the .env file)
+// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -25,12 +25,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.log('MongoDB connection error:', err));
 
-// Check there's a JWT key
+// Check for required JWT key
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is not defined.');
 }
 
-// Secret key for JWT
 const SECRET_KEY = process.env.JWT_SECRET;
 
 // Middleware to verify JWT token
@@ -42,8 +41,8 @@ function verifyToken(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token.split(' ')[1], SECRET_KEY); // Remove 'Bearer' from the token
-    req.user = decoded; // Store decoded user info in request
+    const decoded = jwt.verify(token.split(' ')[1], SECRET_KEY);
+    req.user = decoded; 
   } catch (err) {
     return res.status(401).send('Invalid Token');
   }
@@ -55,9 +54,7 @@ function verifyToken(req, res, next) {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Replace this with real authentication (for demo purposes)
   if (username === process.env.API_USER && password === process.env.API_PASS) {
-    // Generate a token that expires in 1 hour
     const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
     return res.json({ token });
   }
@@ -65,13 +62,20 @@ app.post('/login', (req, res) => {
   return res.status(400).send('Invalid credentials');
 });
 
+// New endpoint to get Tomorrow.io API key (requires JWT)
+app.get('/api/weather-key', verifyToken, (req, res) => {
+  const weatherKey = process.env.TOMORROW_IO_KEY;
+  if (!weatherKey) {
+    return res.status(500).json({ error: 'Weather API key not configured' });
+  }
+  res.json({ key: weatherKey });
+});
+
 // Protect the /api routes with JWT authentication
 app.use('/api', verifyToken);
 
-// Use the task routes for any requests to /api
+// Use the task and tag routes
 app.use('/api', taskRoutes);
-
-// Use the tag routes
 app.use('/api', tagRoutes);
 
 // Start the server
