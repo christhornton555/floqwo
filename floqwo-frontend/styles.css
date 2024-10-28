@@ -13,27 +13,39 @@ body {
   padding: 10px;
   background-color: #1e1e1e;
   color: #ffffff;
-  font-size: 14px;
-  position: fixed; /* Keep it at the top of the viewport */
+  font-size: 13px;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Full width of the screen */
+  width: 100%;
   z-index: 10;
   border-bottom: 1px solid #333;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Indent date/time and task summary */
 #current-date-time {
   flex: 1;
-  padding-left: 15px; /* Indent from the left edge */
+  padding-left: 15px;
+}
+
+#sunrise-sunset {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#sunrise, #sunset {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 #task-summary {
   flex: 1;
   text-align: right;
-  padding-right: 40px; /* Indent from the right edge */
+  padding-right: 40px;
 }
+
 
 /* Heading Styles */
 h1, h2 {
