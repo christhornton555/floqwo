@@ -132,13 +132,14 @@ async function updateWeatherForecast() {
 
   const fetchForecast = async (latitude, longitude) => {
     try {
-      const url = `https://api.tomorrow.io/v4/timelines?location=${latitude},${longitude}&fields=weatherCode&timesteps=1h&units=metric&apikey=${apiKey}`;
+      const url = `https://api.tomorrow.io/v4/timelines?location=${latitude},${longitude}&fields=weatherCode,temperature&timesteps=1h&units=metric&apikey=${apiKey}`;
       const response = await fetch(url);
 
       if (!response.ok) throw new Error('Failed to fetch weather forecast');
 
       const data = await response.json();
       const currentWeather = data.data.timelines[0].intervals[0].values.weatherCode;
+      const currentTemperature = data.data.timelines[0].intervals[0].values.temperature;
       const twoHourForecast = data.data.timelines[0].intervals[2]?.values.weatherCode || null;
       const sixHourForecast = data.data.timelines[0].intervals[6]?.values.weatherCode || null;
 
@@ -242,11 +243,13 @@ async function updateWeatherForecast() {
 
       const formatWeatherIcon = code => {
         console.log(code);
+        console.log(weatherIcons[code]);
         const icon = weatherIcons[code] || getDefaultIcon();
         return `<img src="svg/${icon}" width="20" alt="Weather icon">`;
       };
 
-      document.getElementById('weather-forecast').innerHTML = `${formatWeatherIcon(currentWeather)} | ${formatWeatherIcon(twoHourForecast)} | ${formatWeatherIcon(sixHourForecast)}`;
+      const roundedTemperature = Math.round(currentTemperature);
+      document.getElementById('weather-forecast').innerHTML = `${formatWeatherIcon(currentWeather)} ${roundedTemperature}°C ${formatWeatherIcon(twoHourForecast)} ${formatWeatherIcon(sixHourForecast)}`;
     } catch (error) {
       console.error('Error fetching weather forecast:', error);
       // Display default icons if weather data is not available
