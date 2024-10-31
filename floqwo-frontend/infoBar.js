@@ -5,25 +5,26 @@ function initInfoBar() {
   updateSunriseSunset();
   updateWeatherForecast();
 
-  // Update time every minute
-  setInterval(updateDateTime, 60000);
+  // Update time every second to include live seconds
+  setInterval(updateDateTime, 1000);
 
   // Fetch task summary when tasks are fetched
   document.addEventListener('tasksUpdated', updateTaskSummary);
 }
 
-// Update date and time in the format "HH:MM Day DD/MM/YYYY"
+// Update date and time in the format "HH:MM:SS Day DD/MM/YYYY"
 function updateDateTime() {
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const day = dayNames[now.getDay()];
   const date = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const year = now.getFullYear();
 
-  document.getElementById('current-date-time').textContent = `${hours}:${minutes} ${day} ${date}/${month}/${year}`;
+  document.getElementById('current-date-time').textContent = `${hours}:${minutes}:${seconds} ${day} ${date}/${month}/${year}`;
 }
 
 // Update task summary in the format "completed today/total due by today"
@@ -168,35 +169,35 @@ async function updateWeatherForecast() {
         4203: 'rain.svg', // Mostly Clear and Drizzle
         4204: 'rain.svg', // Partly Cloudy and Drizzle
         4205: 'rain.svg', // Mostly Cloudy and Drizzle
-        // "4213": "Mostly Clear and Light Rain",
-        // "4214": "Partly Cloudy and Light Rain",
-        // "4215": "Mostly Cloudy and Light Rain",
-        // "4209": "Mostly Clear and Rain",
-        // "4208": "Partly Cloudy and Rain",
-        // "4210": "Mostly Cloudy and Rain",
-        // "4211": "Mostly Clear and Heavy Rain",
-        // "4212": "Mostly Cloudy and Heavy Rain",
+        4213: 'rain.svg', // Mostly Clear and Light Rain
+        4214: 'rain.svg', // Partly Cloudy and Light Rain
+        4215: 'rain.svg', // Mostly Cloudy and Light Rain
+        4209: 'rain.svg', // Mostly Clear and Rain
+        4208: 'rain.svg', // Partly Cloudy and Rain
+        4210: 'rain.svg', // Mostly Cloudy and Rain
+        4211: 'rain.svg', // Mostly Clear and Heavy Rain
+        4212: 'rain.svg', // Mostly Cloudy and Heavy Rain
         5000: 'snow.svg', // Snow
-        // "5115": "Mostly Clear and Flurries",
-        // "5116": "Partly Cloudy and Flurries",
-        // "5117": "Mostly Cloudy and Flurries",
-        // "5001": "Flurries",
-        // "5100": "Light Snow",
-        // "5102": "Mostly Clear and Light Snow",
-        // "5103": "Partly Cloudy and Light Snow",
-        // "5104": "Mostly Cloudy and Light Snow",
-        // "5122": "Drizzle and Light Snow",
-        // "5105": "Mostly Clear and Snow",
-        // "5106": "Partly Cloudy and Snow",
-        // "5107": "Mostly Cloudy and Snow",
-        // "5101": "Heavy Snow",
-        // "5119": "Mostly Clear and Heavy Snow",
-        // "5120": "Partly Cloudy and Heavy Snow",
-        // "5121": "Mostly Cloudy and Heavy Snow",
-        // "5110": "Drizzle and Snow",
-        // "5108": "Rain and Snow",
-        // "5114": "Snow and Freezing Rain",
-        // "5112": "Snow and Ice Pellets",
+        5115: 'snow.svg', // Mostly Clear and Flurries
+        5116: 'snow.svg', // Partly Cloudy and Flurries
+        5117: 'snow.svg', // Mostly Cloudy and Flurries
+        5001: 'snow.svg', // Flurries
+        5100: 'snow.svg', // Light Snow
+        5102: 'snow.svg', // Mostly Clear and Light Snow
+        5103: 'snow.svg', // Partly Cloudy and Light Snow
+        5104: 'snow.svg', // Mostly Cloudy and Light Snow
+        5122: 'snow.svg', // Drizzle and Light Snow
+        5105: 'snow.svg', // Mostly Clear and Snow
+        5106: 'snow.svg', // Partly Cloudy and Snow
+        5107: 'snow.svg', // Mostly Cloudy and Snow
+        5101: 'snow.svg', // Heavy Snow
+        5119: 'snow.svg', // Mostly Clear and Heavy Snow
+        5120: 'snow.svg', // Partly Cloudy and Heavy Snow
+        5121: 'snow.svg', // Mostly Cloudy and Heavy Snow
+        5110: 'snow.svg', // Drizzle and Snow
+        5108: 'snow.svg', // Rain and Snow
+        5114: 'snow.svg', // Snow and Freezing Rain
+        5112: 'snow.svg', // Snow and Ice Pellets
         6000: 'ice.svg', // Freezing Drizzle
         // "6003": "Mostly Clear and Freezing drizzle",
         // "6002": "Partly Cloudy and Freezing drizzle",
@@ -219,26 +220,26 @@ async function updateWeatherForecast() {
         // "6208": "Mostly Cloudy and Heavy Freezing Rain",
         // "6201": "Heavy Freezing Rain",
         7000: 'snow.svg', // Ice Pellets
-        // "7110": "Mostly Clear and Light Ice Pellets",
-        // "7111": "Partly Cloudy and Light Ice Pellets",
-        // "7112": "Mostly Cloudy and Light Ice Pellets",
-        // "7102": "Light Ice Pellets",
-        // "7108": "Mostly Clear and Ice Pellets",
-        // "7107": "Partly Cloudy and Ice Pellets",
-        // "7109": "Mostly Cloudy and Ice Pellets",
-        // "7105": "Drizzle and Ice Pellets",
-        // "7106": "Freezing Rain and Ice Pellets",
-        // "7115": "Light Rain and Ice Pellets",
-        // "7117": "Rain and Ice Pellets",
-        // "7103": "Freezing Rain and Heavy Ice Pellets",
-        // "7113": "Mostly Clear and Heavy Ice Pellets",
-        // "7114": "Partly Cloudy and Heavy Ice Pellets",
-        // "7116": "Mostly Cloudy and Heavy Ice Pellets",
-        // "7101": "Heavy Ice Pellets",
-        8000: 'thunderstorm.svg' // Thunderstorm
-        // "8001": "Mostly Clear and Thunderstorm",
-        // "8003": "Partly Cloudy and Thunderstorm",
-        // "8002": "Mostly Cloudy and Thunderstorm",
+        7110: 'snow.svg', // Mostly Clear and Light Ice Pellets
+        7111: 'snow.svg', // Partly Cloudy and Light Ice Pellets
+        7112: 'snow.svg', // Mostly Cloudy and Light Ice Pellets
+        7102: 'snow.svg', // Light Ice Pellets
+        7108: 'snow.svg', // Mostly Clear and Ice Pellets
+        7107: 'snow.svg', // Partly Cloudy and Ice Pellets
+        7109: 'snow.svg', // Mostly Cloudy and Ice Pellets
+        7105: 'snow.svg', // Drizzle and Ice Pellets
+        7106: 'snow.svg', // Freezing Rain and Ice Pellets
+        7115: 'snow.svg', // Light Rain and Ice Pellets
+        7117: 'snow.svg', // Rain and Ice Pellets
+        7103: 'snow.svg', // Freezing Rain and Heavy Ice Pellets
+        7113: 'snow.svg', // Mostly Clear and Heavy Ice Pellets
+        7114: 'snow.svg', // Partly Cloudy and Heavy Ice Pellets
+        7116: 'snow.svg', // Mostly Cloudy and Heavy Ice Pellets
+        7101: 'snow.svg', // Heavy Ice Pellets
+        8000: 'thunderstorm.svg', // Thunderstorm
+        8001: 'thunderstorm.svg', // Mostly Clear and Thunderstorm
+        8003: 'thunderstorm.svg', // Partly Cloudy and Thunderstorm
+        8002: 'thunderstorm.svg' // Mostly Cloudy and Thunderstorm
       };
 
       const formatWeatherIcon = code => {
@@ -271,6 +272,18 @@ async function updateWeatherForecast() {
     console.error('Geolocation not supported by this browser.');
   }
 }
+// Set the height of the info bar as a CSS variable for consistent positioning of the notification
+function setInfoBarHeight() {
+  const infoBar = document.getElementById('info-bar');
+  document.documentElement.style.setProperty('--info-bar-height', `${infoBar.offsetHeight}px`);
+}
+
+// Initialize the info bar on page load and adjust on resize
+document.addEventListener('DOMContentLoaded', () => {
+  setInfoBarHeight();
+  initInfoBar();
+  window.addEventListener('resize', setInfoBarHeight); // Adjust on window resize
+});
 
 // Initialize the info bar on page load
-document.addEventListener('DOMContentLoaded', initInfoBar);
+// document.addEventListener('DOMContentLoaded', initInfoBar);

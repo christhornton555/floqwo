@@ -2,6 +2,7 @@
 const addTaskModal = document.getElementById('addTaskModal');
 const openAddTaskModalBtn = document.getElementById('openAddTaskModal');
 const closeAddTaskModalBtn = document.getElementById('closeAddTaskModal');
+const notification = document.getElementById('notification');
 
 openAddTaskModalBtn.onclick = function () {
   document.getElementById('add-task-title').value = '';
@@ -22,6 +23,20 @@ window.onclick = function (event) {
   }
 };
 
+// Function to show notification message
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.style.opacity = '1'; // Fade in
+  notification.style.display = 'block';
+
+  // Fade out the notification after 1500 milliseconds
+  setTimeout(() => {
+    notification.style.opacity = '0'; // Fade out
+    setTimeout(() => notification.style.display = 'none', 500); // Wait for fade-out transition to complete
+  }, 1500);
+}
+
 // Function to handle adding a task on submit
 document.getElementById('add-task-form').addEventListener('submit', async function (event) {
   event.preventDefault();
@@ -30,7 +45,6 @@ document.getElementById('add-task-form').addEventListener('submit', async functi
   const dueDate = document.getElementById('add-task-due-date').value;
 
   const tags = getSelectedTags('add-tag-container');
-
   const taskData = { title, description, dueDate, tags };
 
   // Assuming `apiUrl` and token retrieval are set
@@ -45,11 +59,11 @@ document.getElementById('add-task-form').addEventListener('submit', async functi
   });
 
   if (response.ok) {
-    alert('Task added successfully');
+    showNotification('Task added successfully');
     renderTasks();
     addTaskModal.style.display = 'none';
   } else {
-    alert('Failed to add task');
+    showNotification('Failed to add task');
   }
 });
 

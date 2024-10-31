@@ -51,6 +51,19 @@ body {
   padding-right: 40px;
 }
 
+#notification {
+  position: absolute;
+  top: calc(5px + var(--info-bar-height)); /* Adjust based on the info bar’s height */
+  right: 30px;
+  font-size: 16px;
+  color: yellow;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 
 /* Heading Styles */
 h1, h2 {
