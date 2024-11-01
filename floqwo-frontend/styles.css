@@ -37,11 +37,12 @@ body {
 #sunrise, #sunset {
   display: flex;
   align-items: center;
-  gap: 5px;
 }
 
 #weather-forecast {
-  flex: 1;
+  display: flex;
+  gap: 20px;
+  align-items: center;
   padding-left: 15px;
 }
 
@@ -49,6 +50,47 @@ body {
   flex: 1;
   text-align: right;
   padding-right: 40px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+  
+  #info-bar {
+  padding: 5px;
+  }
+
+  #sunrise-sunset {
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 0px;
+    align-items: center;
+  }
+
+  #sunrise {
+    align-items: flex-end;
+  }
+
+  #sunset {
+    align-items: flex-start;
+  }
+
+  /* Smaller icon sizes for mobile */
+  #sunrise img, #sunset img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #weather-forecast {
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 0px;
+    align-items: center;
+    padding-left: 15px;
+  }
+
+  #weather-forecast img {
+    padding: 0px 5px;
+  }
 }
 
 #notification {

@@ -144,6 +144,11 @@ async function updateWeatherForecast() {
       const twoHourForecast = data.data.timelines[0].intervals[2]?.values.weatherCode || null;
       const sixHourForecast = data.data.timelines[0].intervals[6]?.values.weatherCode || null;
 
+      // const currentWeather = 1000; // Test value
+      // const currentTemperature = 30; // Test value
+      // const twoHourForecast = 1101; // Test value
+      // const sixHourForecast = 8000; // Test value
+
       const weatherIcons = {
         1000: 'clear-day.svg', // Clear, Sunny
         1001: 'cloud.svg', // Cloudy
@@ -199,26 +204,26 @@ async function updateWeatherForecast() {
         5114: 'snow.svg', // Snow and Freezing Rain
         5112: 'snow.svg', // Snow and Ice Pellets
         6000: 'ice.svg', // Freezing Drizzle
-        // "6003": "Mostly Clear and Freezing drizzle",
-        // "6002": "Partly Cloudy and Freezing drizzle",
-        // "6004": "Mostly Cloudy and Freezing drizzle",
-        // "6204": "Drizzle and Freezing Drizzle",
-        // "6206": "Light Rain and Freezing Drizzle",
-        // "6205": "Mostly Clear and Light Freezing Rain",
-        // "6203": "Partly Cloudy and Light Freezing Rain",
-        // "6209": "Mostly Cloudy and Light Freezing Rain",
-        // "6200": "Light Freezing Rain",
-        // "6213": "Mostly Clear and Freezing Rain",
-        // "6214": "Partly Cloudy and Freezing Rain",
-        // "6215": "Mostly Cloudy and Freezing Rain",
-        // "6001": "Freezing Rain",
-        // "6212": "Drizzle and Freezing Rain",
-        // "6220": "Light Rain and Freezing Rain",
-        // "6222": "Rain and Freezing Rain",
-        // "6207": "Mostly Clear and Heavy Freezing Rain",
-        // "6202": "Partly Cloudy and Heavy Freezing Rain",
-        // "6208": "Mostly Cloudy and Heavy Freezing Rain",
-        // "6201": "Heavy Freezing Rain",
+        6003: 'ice.svg', // Mostly Clear and Freezing drizzle
+        6002: 'ice.svg', // Partly Cloudy and Freezing drizzle
+        6004: 'ice.svg', // Mostly Cloudy and Freezing drizzle
+        6204: 'ice.svg', // Drizzle and Freezing Drizzle
+        6206: 'ice.svg', // Light Rain and Freezing Drizzle
+        6205: 'ice.svg', // Mostly Clear and Light Freezing Rain
+        6203: 'ice.svg', // Partly Cloudy and Light Freezing Rain
+        6209: 'ice.svg', // Mostly Cloudy and Light Freezing Rain
+        6200: 'ice.svg', // Light Freezing Rain
+        6213: 'ice.svg', // Mostly Clear and Freezing Rain
+        6214: 'ice.svg', // Partly Cloudy and Freezing Rain
+        6215: 'ice.svg', // Mostly Cloudy and Freezing Rain
+        6001: 'ice.svg', // Freezing Rain
+        6212: 'ice.svg', // Drizzle and Freezing Rain
+        6220: 'ice.svg', // Light Rain and Freezing Rain
+        6222: 'ice.svg', // Rain and Freezing Rain
+        6207: 'ice.svg', // Mostly Clear and Heavy Freezing Rain
+        6202: 'ice.svg', // Partly Cloudy and Heavy Freezing Rain
+        6208: 'ice.svg', // Mostly Cloudy and Heavy Freezing Rain
+        6201: 'ice.svg', // Heavy Freezing Rain
         7000: 'snow.svg', // Ice Pellets
         7110: 'snow.svg', // Mostly Clear and Light Ice Pellets
         7111: 'snow.svg', // Partly Cloudy and Light Ice Pellets
@@ -250,7 +255,7 @@ async function updateWeatherForecast() {
       };
 
       const roundedTemperature = Math.round(currentTemperature);
-      document.getElementById('weather-forecast').innerHTML = `${formatWeatherIcon(currentWeather)} ${roundedTemperature}°C ${formatWeatherIcon(twoHourForecast)} ${formatWeatherIcon(sixHourForecast)}`;
+      document.getElementById('weather-forecast').innerHTML = `${formatWeatherIcon(currentWeather)} <span class="temperature">${roundedTemperature}°C</span> ${formatWeatherIcon(twoHourForecast)} ${formatWeatherIcon(sixHourForecast)}`;
     } catch (error) {
       console.error('Error fetching weather forecast:', error);
       // Display default icons if weather data is not available
