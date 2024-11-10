@@ -68,6 +68,25 @@ function getDefaultIcon() {
   return now >= sunriseTime && now < sunsetTime ? 'broken-cloud-day.svg' : 'broken-cloud-night.svg';
 }
 
+// Function to determine clear skies weather icon based on time of day
+function getClearSkiesIcon(iconToCheck) {
+  const now = new Date();
+  const sunriseTime = new Date(document.getElementById('sunrise-time').textContent);
+  const sunsetTime = new Date(document.getElementById('sunset-time').textContent);
+  if (!(now >= sunriseTime && now < sunsetTime)) {
+    switch (iconToCheck) {
+      case 'broken-cloud-day.svg':
+        return 'broken-cloud-night.svg';
+      
+      case 'clear-day.svg':
+        return 'clear-night.svg';
+      
+      default:
+        return iconToCheck;
+    }
+  }
+}
+
 // Update sunrise and sunset times using Tomorrow.io API
 async function updateSunriseSunset() {
   const token = localStorage.getItem('token');
@@ -97,6 +116,7 @@ async function updateSunriseSunset() {
 
           document.getElementById('sunrise-time').textContent = formatTime(sunriseTime);
           document.getElementById('sunset-time').textContent = formatTime(sunsetTime);
+          return;
       } catch (error) {
           console.error('Error fetching sunrise/sunset times:', error);
       }
@@ -250,7 +270,8 @@ async function updateWeatherForecast() {
       const formatWeatherIcon = code => {
         console.log(code);
         console.log(weatherIcons[code]);
-        const icon = weatherIcons[code] || getDefaultIcon();
+        icon = weatherIcons[code] || getDefaultIcon();
+        icon = getClearSkiesIcon(icon);
         return `<img src="svg/${icon}" width="20" alt="Weather icon">`;
       };
 
@@ -259,7 +280,7 @@ async function updateWeatherForecast() {
     } catch (error) {
       console.error('Error fetching weather forecast:', error);
       // Display default icons if weather data is not available
-      document.getElementById('weather-forecast').innerHTML = `<img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon"> | <img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon"> | <img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon">`;
+      document.getElementById('weather-forecast').innerHTML = `<img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon"> <img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon"> <img src="svg/${getDefaultIcon()}" width="20" alt="Default weather icon">`;
     }
   };
 
@@ -277,6 +298,7 @@ async function updateWeatherForecast() {
     console.error('Geolocation not supported by this browser.');
   }
 }
+
 // Set the height of the info bar as a CSS variable for consistent positioning of the notification
 function setInfoBarHeight() {
   const infoBar = document.getElementById('info-bar');
