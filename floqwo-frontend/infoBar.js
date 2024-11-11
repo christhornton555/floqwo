@@ -76,6 +76,12 @@ function getClearSkiesIcon(iconToCheck) {
   if (!(now >= sunriseTime && now < sunsetTime)) {
     switch (iconToCheck) {
       case 'broken-cloud-day.svg':
+        console.log("br cloud day")
+        console.log(now)
+        console.log(sunriseTime)
+        console.log(now >= sunriseTime)
+        console.log(now < sunsetTime)
+        console.log(now >= sunriseTime && now < sunsetTime)
         return 'broken-cloud-night.svg';
       
       case 'clear-day.svg':
