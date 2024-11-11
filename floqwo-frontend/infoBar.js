@@ -68,7 +68,7 @@ function getDefaultIcon() {
   return now >= sunriseTime && now < sunsetTime ? 'broken-cloud-day.svg' : 'broken-cloud-night.svg';
 }
 
-// Function to determine clear skies weather icon based on time of day
+// Function to determine clear skies weather icon based on time of day - not working yet >:(
 function getClearSkiesIcon(iconToCheck) {
   const now = new Date();
   const sunriseTime = new Date(document.getElementById('sunrise-time').textContent);
